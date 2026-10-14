@@ -4,8 +4,10 @@ import { eq } from 'drizzle-orm';
 import { db, users, payments, entitlements, magicLinkTokens, auditEvents } from '@repo/database';
 import { PRODUCTS, ProductSlug } from '@repo/domain';
 import { sendPurchaseReceiptEmail } from '@repo/email';
+import { initializePaystackPayment } from './paystack';
 
 export * from './paystack';
+
 
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -17,28 +19,54 @@ export async function createCheckoutSession({
   productSlug,
   email,
   originUrl,
+  currency = 'NGN',
 }: {
   productSlug: ProductSlug;
   email?: string;
   originUrl: string;
+  currency?: 'NGN' | 'USD';
 }) {
   const product = PRODUCTS[productSlug];
   if (!product) {
     throw new Error(`Invalid product slug: ${productSlug}`);
   }
 
-  // If Stripe is not configured, support local simulated checkout
-  if (!stripe) {
-    return {
-      mode: 'simulation' as const,
-      simulatedUrl: `${originUrl}/checkout/simulate?product=${productSlug}${email ? `&email=${encodeURIComponent(email)}` : ''}`,
-      product,
-    };
+  // 1. Paystack Integration
+  if (process.env.PAYSTACK_SECRET_KEY) {
+    if (!email) {
+      return {
+        mode: 'checkout_redirect' as const,
+        url: `${originUrl}/checkout/initiate?product=${productSlug}`,
+      };
+    }
+
+    const callbackUrl = `${originUrl}/checkout/paystack-callback?product=${productSlug}`;
+    const amountInKoboOrCents =
+      currency === 'NGN' ? product.priceInNgn * 100 : product.priceInCents;
+
+    const paystackResult = await initializePaystackPayment({
+      email,
+      amountInKoboOrCents,
+      currency,
+      callbackUrl,
+      productSlug,
+    });
+
+    if (paystackResult.mode === 'paystack') {
+      return {
+        mode: 'paystack' as const,
+        url: paystackResult.authorizationUrl,
+        reference: paystackResult.reference,
+      };
+    }
   }
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    customer_email: email,
+  // 2. Stripe Checkout
+  if (stripe) {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      customer_email: email,
+
     line_items: [
       {
         price_data: {
@@ -60,12 +88,21 @@ export async function createCheckoutSession({
     cancel_url: `${originUrl}/#pricing`,
   });
 
+    return {
+      mode: 'stripe' as const,
+      url: session.url,
+      sessionId: session.id,
+    };
+  }
+
+  // 3. Fallback to simulation
   return {
-    mode: 'stripe' as const,
-    url: session.url,
-    sessionId: session.id,
+    mode: 'simulation' as const,
+    simulatedUrl: `${originUrl}/checkout/simulate?product=${productSlug}${email ? `&email=${encodeURIComponent(email)}` : ''}`,
+    product,
   };
 }
+
 
 export async function processSuccessfulPayment({
   checkoutSessionId,

@@ -9,6 +9,7 @@ export interface ProductConfig {
   headline: string;
   description: string;
   priceInCents: number;
+  priceInNgn: number;
   currency: string;
   badge?: string;
   isPopular?: boolean;
@@ -24,6 +25,7 @@ export const PRODUCTS: Record<string, ProductConfig> = {
     headline: 'Structured, progressive strength & conditioning',
     description: 'Full access to progressive workout programs, exercise video library, weekly session guidance, and habit tracking.',
     priceInCents: 4900,
+    priceInNgn: 45000,
     currency: 'usd',
     entitlements: ['training'],
     features: [
@@ -41,6 +43,7 @@ export const PRODUCTS: Record<string, ProductConfig> = {
     headline: 'High-protein, chef-crafted editorial recipes',
     description: 'Lifetime access to over 60+ nutritionist-calibrated meals, macro profiles, curated grocery frameworks, and meal prep guides.',
     priceInCents: 3900,
+    priceInNgn: 35000,
     currency: 'usd',
     entitlements: ['cookbook'],
     features: [
@@ -58,10 +61,12 @@ export const PRODUCTS: Record<string, ProductConfig> = {
     headline: 'The definitive physical training & culinary blueprint',
     description: 'Full unfiltered access to both the Training Protocol and the complete High-Performance Kitchen collection with unified dashboard.',
     priceInCents: 6900,
+    priceInNgn: 65000,
     currency: 'usd',
-    badge: 'Best Value — Save $19',
+    badge: 'Best Value — Save ₦15,000 / $19',
     isPopular: true,
     entitlements: ['training', 'cookbook'],
+
     features: [
       'Everything in Training Protocol (12-week program)',
       'Everything in The High-Performance Kitchen (60+ recipes)',
