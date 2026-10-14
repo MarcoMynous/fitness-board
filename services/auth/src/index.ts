@@ -2,6 +2,11 @@ import crypto from 'crypto';
 import { eq, and, gt, isNull } from 'drizzle-orm';
 import { db, users, magicLinkTokens, sessions, entitlements, profiles, auditEvents } from '@repo/database';
 import { sendMagicLinkEmail } from '@repo/email';
+import { checkRateLimit } from './ratelimit';
+import { verifyTurnstileToken } from './turnstile';
+
+export * from './ratelimit';
+export * from './turnstile';
 
 export function hashToken(token: string): string {
   return crypto.createHash('sha256').update(token).digest('hex');
@@ -19,18 +24,46 @@ export async function requestMagicLink({
   ipAddress,
   userAgent,
   originUrl,
+  turnstileToken,
 }: {
   email: string;
   ipAddress?: string;
   userAgent?: string;
   originUrl: string;
+  turnstileToken?: string | null;
 }) {
   const normalizedEmail = email.trim().toLowerCase();
 
-  // 1. Look up user or check pending payment
+  // 1. Bot Verification via Cloudflare Turnstile
+  if (turnstileToken !== undefined) {
+    const turnstileResult = await verifyTurnstileToken({
+      token: turnstileToken,
+      remoteIp: ipAddress,
+    });
+    if (!turnstileResult.success) {
+      return {
+        success: false,
+        error: turnstileResult.error || 'Bot verification failed. Please try again.',
+      };
+    }
+  }
+
+  // 2. Rate Limiting via Redis (or in-memory sliding window)
+  const rateLimitKey = ipAddress ? `ip:${ipAddress}` : `email:${normalizedEmail}`;
+  const rateLimit = await checkRateLimit(`magic_link:${rateLimitKey}`, 5, 600);
+
+  if (!rateLimit.success) {
+    return {
+      success: false,
+      error: 'Too many requests. Please wait a few minutes before requesting another sign-in link.',
+    };
+  }
+
+  // 3. Look up user or check pending payment
   const existingUser = await db.query.users.findFirst({
     where: eq(users.email, normalizedEmail),
   });
+
 
   // Always return generic success to prevent email enumeration
   // But if user does not exist yet (no purchase made), we can still record/issue or log

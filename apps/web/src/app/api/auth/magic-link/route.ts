@@ -17,15 +17,25 @@ export async function POST(req: NextRequest) {
     const origin = req.nextUrl.origin;
     const ipAddress = req.headers.get('x-forwarded-for') || undefined;
     const userAgent = req.headers.get('user-agent') || undefined;
+    const turnstileToken = body.turnstileToken ? String(body.turnstileToken) : undefined;
 
     const result = await requestMagicLink({
       email: parseResult.data.email,
       ipAddress,
       userAgent,
       originUrl: origin,
+      turnstileToken,
     });
 
+    if (!result.success) {
+      return NextResponse.json(
+        { error: result.error || 'Failed to process request.' },
+        { status: result.error?.includes('Too many') ? 429 : 400 }
+      );
+    }
+
     return NextResponse.json(result);
+
   } catch (error) {
     console.error('Error requesting magic link:', error);
     return NextResponse.json(

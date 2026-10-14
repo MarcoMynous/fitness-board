@@ -5,6 +5,9 @@ import { db, users, payments, entitlements, magicLinkTokens, auditEvents } from 
 import { PRODUCTS, ProductSlug } from '@repo/domain';
 import { sendPurchaseReceiptEmail } from '@repo/email';
 
+export * from './paystack';
+
+
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 export const stripe = stripeSecretKey
   ? new Stripe(stripeSecretKey, { apiVersion: '2025-02-24.acacia' as any })
