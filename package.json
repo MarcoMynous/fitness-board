@@ -1,0 +1,22 @@
+{
+  "name": "fitness-platform",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "db:generate": "pnpm --filter @repo/database db:generate",
+    "db:migrate": "pnpm --filter @repo/database db:migrate",
+    "db:seed": "pnpm --filter @repo/database db:seed",
+    "db:studio": "pnpm --filter @repo/database db:studio"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.2",
+    "turbo": "^2.4.4",
+    "typescript": "^5.8.2"
+  },
+  "packageManager": "pnpm@10.30.3"
+}
