@@ -44,13 +44,29 @@ export async function createCheckoutSession({
     const amountInKoboOrCents =
       currency === 'NGN' ? product.priceInNgn * 100 : product.priceInCents;
 
-    const paystackResult = await initializePaystackPayment({
-      email,
-      amountInKoboOrCents,
-      currency,
-      callbackUrl,
-      productSlug,
-    });
+    let paystackResult;
+    try {
+      paystackResult = await initializePaystackPayment({
+        email,
+        amountInKoboOrCents,
+        currency,
+        callbackUrl,
+        productSlug,
+      });
+    } catch (err: any) {
+      if (currency === 'USD' && err.message?.includes('Currency not supported')) {
+        // Fallback to NGN
+        paystackResult = await initializePaystackPayment({
+          email,
+          amountInKoboOrCents: product.priceInNgn * 100,
+          currency: 'NGN',
+          callbackUrl,
+          productSlug,
+        });
+      } else {
+        throw err;
+      }
+    }
 
     if (paystackResult.mode === 'paystack') {
       return {

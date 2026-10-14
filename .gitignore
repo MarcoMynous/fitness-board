@@ -18,3 +18,5 @@ build
 
 # Database data
 pgdata
+
+*.tsbuildinfo

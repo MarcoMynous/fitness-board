@@ -8,11 +8,13 @@ export async function POST(req: NextRequest) {
     const productSlug = ProductSlugSchema.parse(body.productSlug);
     const email = body.email ? String(body.email) : undefined;
     const origin = req.nextUrl.origin;
+    const currency = body.currency === 'USD' ? 'USD' : 'NGN';
 
     const result = await createCheckoutSession({
       productSlug,
       email,
       originUrl: origin,
+      currency,
     });
 
     return NextResponse.json(result);
