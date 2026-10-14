@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google';
+import { Bodoni_Moda, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 
-const editorialFont = Fraunces({
+const editorialFont = Bodoni_Moda({
   subsets: ['latin'],
   variable: '--font-editorial',
   display: 'swap',
