@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import { eq, and, gt, isNull } from 'drizzle-orm';
-import { db, users, magicLinkTokens, sessions, entitlements, profiles, auditEvents } from '@repo/database';
+import { db, users, payments, magicLinkTokens, sessions, entitlements, profiles, auditEvents } from '@repo/database';
 import { sendMagicLinkEmail } from '@repo/email';
 import { checkRateLimit } from './ratelimit';
 import { verifyTurnstileToken } from './turnstile';
@@ -76,7 +76,7 @@ export async function requestMagicLink({
   } else {
     // If user doesn't exist, check if there's any completed payment for this email
     const payment = await db.query.payments.findFirst({
-      where: eq(users.email, normalizedEmail),
+      where: eq(payments.customerEmail, normalizedEmail),
     });
 
     if (payment) {
