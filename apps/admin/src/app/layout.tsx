@@ -68,7 +68,7 @@ export default function AdminLayout({
 
           <div className="p-4 border-t border-stone-border space-y-2">
             <a
-              href="http://localhost:3000"
+              href={process.env.NEXT_PUBLIC_APP_URL || '/'}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-between px-3 py-2 text-xs font-medium text-stone-secondary hover:text-stone-primary hover:bg-surface-sunken rounded-lg transition-colors"
