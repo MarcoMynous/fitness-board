@@ -10,7 +10,7 @@ interface FinalCtaSectionProps {
 
 export function FinalCtaSection({ onCheckout, isLoading }: FinalCtaSectionProps) {
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl bg-deep-charcoal text-on-primary border border-white/10">
         <div className="grid grid-cols-1 lg:grid-cols-12 items-center">
           {/* Text Left (7 cols) */}
@@ -45,7 +45,7 @@ export function FinalCtaSection({ onCheckout, isLoading }: FinalCtaSectionProps)
             <img
               alt="Confident smiling trainer standing tall in natural light"
               className="w-full h-full object-cover object-top opacity-90"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1VVTbNtduNSAJjTrtQIgXo4oELskgJRHbvma9kXDKEighjBj7knZ_IuK9qKFtTxPA78aaqnWkp9TcFonlx0tfL_lW6ZmH3ccbiISjy4JHpf4nmrb9xY8lcL_4ffipdmeJy_4GZrbdbNHcps6kSLriD3fBMg6bHZm4puR7uYxDIg0Bf496oQ24xyDqKETGXbcc-YoSuDcB0Rq3apdL4AeFhOeoUaDOh07TO4j8RdRYI5Y9CW4Qv3Eol4Bgk"
+              src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=1200&q=85"
             />
           </div>
         </div>

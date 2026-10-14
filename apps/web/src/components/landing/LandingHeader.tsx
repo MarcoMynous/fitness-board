@@ -21,13 +21,13 @@ export function LandingHeader({
 }: LandingHeaderProps) {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-canvas-cream/90 backdrop-blur-xl border-b border-border-subtle shadow-[0_1px_8px_rgba(28,26,24,0.04)]">
-      <div className="h-20 max-w-[1280px] mx-auto px-margin md:px-margin-desktop flex items-center justify-between gap-space-md">
+      <div className="h-20 max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-space-md">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-space-sm focus:outline-none group">
-          <div className="w-8 h-8 rounded-lg bg-primary text-on-primary flex items-center justify-center font-serif font-bold text-sm shadow-sm group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center font-serif font-bold text-base shadow-sm group-hover:scale-105 transition-transform">
             K
           </div>
-          <span className="font-headline-sm text-[20px] font-serif text-deep-charcoal tracking-tight font-bold">
+          <span className="font-serif font-bold text-[22px] text-deep-charcoal tracking-tight">
             Kinfolk &amp; Core
           </span>
         </Link>

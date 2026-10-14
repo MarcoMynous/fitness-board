@@ -30,7 +30,7 @@ export function TestimonialsSection() {
 
   return (
     <section id="results" className="w-full bg-deep-charcoal text-on-primary py-space-xl lg:py-space-2xl">
-      <div className="max-w-[1280px] mx-auto px-margin md:px-margin-desktop">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="flex flex-col space-y-space-xs mb-space-xl sm:mb-space-2xl text-center max-w-2xl mx-auto">
           <span className="text-[11px] font-bold text-primary-fixed tracking-widest uppercase font-sans">
             REAL STORIES

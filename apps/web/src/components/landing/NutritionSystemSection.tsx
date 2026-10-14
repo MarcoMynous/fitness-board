@@ -5,15 +5,15 @@ import { Utensils, Sparkles, Check, Flame } from 'lucide-react';
 
 export function NutritionSystemSection() {
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
         {/* Left Image Showcase (6 cols) */}
         <div className="lg:col-span-6 relative">
-          <div className="w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-xl bg-surface-cream relative border border-border-subtle">
+          <div className="w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl bg-surface-cream relative border border-border-subtle">
             <img
               alt="Vibrant chicken jollof bowl with fried plantains, avocado, and fresh greens"
               className="w-full h-full object-cover hover:scale-102 transition-transform duration-700"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1Wwv2XCIRqbKJy1ipaSrs2790DQyd3zTcACMWYpUrTKKuca0ZY8z2l16KO-fC3soTdXWcZA0EDL-ipfSWpAZDFYQdZadBf61n3A6p7bmiGGcL0Xfb89KsdZU8huxtWP6zn91Y6tpRxU9ciaQRuX31-6vsR1rDNjDvBdsjdVMunWhMhXEeCn3YoUFOV_DbqQk5PW2MjoBbXm03H4Wp5PU59M7g7RXzRigCmLJvyh1o-4sLgUEp51PpqK7oBB"
+              src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1200&q=85"
             />
             <div className="absolute bottom-4 right-4 bg-deep-charcoal/90 backdrop-blur-md px-4 py-2 rounded-xl text-on-primary border border-white/10 shadow-lg">
               <span className="text-[11px] tracking-wider uppercase font-bold text-primary-fixed-dim">

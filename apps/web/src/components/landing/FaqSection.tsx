@@ -42,7 +42,7 @@ export function FaqSection() {
   ];
 
   return (
-    <section id="faq" className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section id="faq" className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="text-center max-w-2xl mx-auto space-y-space-xs mb-space-xl sm:mb-space-2xl">
         <span className="text-[11px] font-bold text-primary tracking-widest uppercase font-sans">
           GOT QUESTIONS?

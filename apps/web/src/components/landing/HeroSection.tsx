@@ -10,7 +10,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onCheckout, isLoading }: HeroSectionProps) {
   return (
-    <section className="relative w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl overflow-hidden">
+    <section className="relative w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl overflow-hidden">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
         {/* Left Column: Copy & Actions (6 cols) */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-space-lg z-10">
@@ -23,13 +23,13 @@ export function HeroSection({ onCheckout, isLoading }: HeroSectionProps) {
           </div>
 
           {/* Main Display Headline */}
-          <h1 className="font-serif text-[40px] sm:text-[48px] lg:text-[58px] text-deep-charcoal leading-[1.08] tracking-tight font-bold">
+          <h1 className="font-serif text-[42px] sm:text-[52px] lg:text-[64px] text-deep-charcoal leading-[1.06] tracking-tight font-bold">
             BUILD THE BODY.<br />
             <span className="italic font-normal text-primary">KEEP THE LIFESTYLE.</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-[16px] sm:text-[18px] text-muted-charcoal max-w-xl font-normal leading-relaxed">
+          <p className="text-[16px] sm:text-[19px] text-muted-charcoal max-w-xl font-normal leading-relaxed">
             A complete workout, meal, and progress system designed to help you stay consistent without turning your life upside down.
           </p>
 
@@ -39,7 +39,7 @@ export function HeroSection({ onCheckout, isLoading }: HeroSectionProps) {
               type="button"
               onClick={onCheckout}
               disabled={isLoading}
-              className="inline-flex items-center justify-center gap-space-sm h-[54px] px-space-xl rounded-xl bg-primary text-on-primary font-bold text-[14px] tracking-wider uppercase shadow-[0_4px_16px_-2px_rgba(154,64,35,0.25)] hover:bg-terracotta-hover transition-all active:scale-[0.99] group cursor-pointer"
+              className="inline-flex items-center justify-center gap-space-sm h-[56px] px-space-xl rounded-xl bg-primary text-on-primary font-bold text-[14px] sm:text-[15px] tracking-wider uppercase shadow-[0_4px_16px_-2px_rgba(154,64,35,0.25)] hover:bg-terracotta-hover transition-all active:scale-[0.99] group cursor-pointer"
             >
               <span>{isLoading ? 'INITIALIZING...' : 'START MY TRANSFORMATION'}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -81,12 +81,12 @@ export function HeroSection({ onCheckout, isLoading }: HeroSectionProps) {
         </div>
 
         {/* Right Column: Editorial Hero Imagery (6 cols) */}
-        <div className="lg:col-span-6 relative flex justify-center items-center mt-6 lg:mt-0">
-          <div className="relative w-full aspect-[4/5] max-w-[500px] rounded-2xl overflow-hidden shadow-xl bg-surface-cream border border-border-subtle">
+        <div className="lg:col-span-6 relative flex justify-center lg:justify-end items-center mt-8 lg:mt-0">
+          <div className="relative w-full aspect-[4/5] sm:aspect-[5/6] max-w-[560px] rounded-3xl overflow-hidden shadow-2xl bg-surface-cream border border-border-subtle">
             <img
               alt="Nigerian female trainer smiling warmly in terracotta athletic wear in bright studio"
               className="w-full h-full object-cover object-top hover:scale-102 transition-transform duration-700"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1VVTbNtduNSAJjTrtQIgXo4oELskgJRHbvma9kXDKEighjBj7knZ_IuK9qKFtTxPA78aaqnWkp9TcFonlx0tfL_lW6ZmH3ccbiISjy4JHpf4nmrb9xY8lcL_4ffipdmeJy_4GZrbdbNHcps6kSLriD3fBMg6bHZm4puR7uYxDIg0Bf496oQ24xyDqKETGXbcc-YoSuDcB0Rq3apdL4AeFhOeoUaDOh07TO4j8RdRYI5Y9CW4Qv3Eol4Bgk"
+              src="https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=1200&q=85"
             />
 
             {/* Floating Pill Badge */}

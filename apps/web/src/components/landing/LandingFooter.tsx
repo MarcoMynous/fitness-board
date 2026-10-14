@@ -6,7 +6,7 @@ import Link from 'next/link';
 export function LandingFooter() {
   return (
     <footer className="w-full bg-surface-cream border-t border-border-subtle py-space-xl lg:py-space-2xl">
-      <div className="max-w-[1280px] mx-auto px-margin md:px-margin-desktop">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-xl pb-space-xl border-b border-border-subtle">
           <div className="space-y-space-xs">
             <div className="flex items-center gap-space-sm">

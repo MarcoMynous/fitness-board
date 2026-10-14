@@ -14,7 +14,7 @@ export function CurriculumIncludedSection() {
   ];
 
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
         {/* Left Headline (5 cols) */}
         <div className="lg:col-span-5 space-y-space-md">

@@ -8,7 +8,7 @@ export function CompanionDashboardPreview() {
 
   return (
     <section id="dashboard-preview" className="w-full bg-surface-cream py-space-xl lg:py-space-2xl border-y border-border-subtle">
-      <div className="max-w-[1280px] mx-auto px-margin md:px-margin-desktop">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="text-center max-w-2xl mx-auto space-y-space-xs mb-space-xl sm:mb-space-2xl">
           <span className="text-[11px] font-bold text-primary tracking-widest uppercase font-sans">
             THE COMPANION DASHBOARD
@@ -115,7 +115,7 @@ export function CompanionDashboardPreview() {
                   <img
                     alt="Chicken jollof bowl preview"
                     className="w-full h-full object-cover"
-                    src="https://lh3.googleusercontent.com/aida/AEtjO1Wwv2XCIRqbKJy1ipaSrs2790DQyd3zTcACMWYpUrTKKuca0ZY8z2l16KO-fC3soTdXWcZA0EDL-ipfSWpAZDFYQdZadBf61n3A6p7bmiGGcL0Xfb89KsdZU8huxtWP6zn91Y6tpRxU9ciaQRuX31-6vsR1rDNjDvBdsjdVMunWhMhXEeCn3YoUFOV_DbqQk5PW2MjoBbXm03H4Wp5PU59M7g7RXzRigCmLJvyh1o-4sLgUEp51PpqK7oBB"
+                    src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=1000&q=85"
                   />
                 </div>
                 <div className="flex-1 min-w-0">

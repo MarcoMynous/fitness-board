@@ -21,7 +21,7 @@ export function PricingEnrollmentSection({
 
   return (
     <section id="pricing" className="w-full bg-surface-cream py-space-xl lg:py-space-2xl border-t border-border-subtle">
-      <div className="max-w-[900px] mx-auto px-margin md:px-margin-desktop">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="bg-canvas-cream rounded-3xl shadow-xl overflow-hidden p-space-lg sm:p-space-xl md:p-space-2xl space-y-space-lg text-center relative border border-border-subtle">
           {/* Badge */}
           <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-[11px] font-bold uppercase tracking-wider">

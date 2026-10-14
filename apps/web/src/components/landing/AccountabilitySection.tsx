@@ -15,7 +15,7 @@ export function AccountabilitySection() {
 
   return (
     <section className="w-full bg-surface-cream py-space-xl lg:py-space-2xl border-y border-border-subtle">
-      <div className="max-w-[1280px] mx-auto px-margin md:px-margin-desktop">
+      <div className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-space-xl gap-space-md">
           <div>
             <span className="font-serif text-[32px] sm:text-[40px] text-primary/40 font-bold block leading-none">

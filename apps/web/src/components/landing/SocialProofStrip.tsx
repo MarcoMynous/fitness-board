@@ -6,7 +6,7 @@ import { Star } from 'lucide-react';
 export function SocialProofStrip() {
   return (
     <section className="w-full bg-surface-cream border-y border-border-subtle py-space-lg">
-      <div className="max-w-[1280px] mx-auto px-margin md:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left">
+      <div className="max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 flex flex-col md:flex-row items-center justify-between gap-space-md text-center md:text-left">
         {/* Rating */}
         <div className="flex items-center gap-space-sm justify-center">
           <div className="flex text-primary">

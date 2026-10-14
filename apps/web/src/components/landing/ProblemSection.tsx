@@ -9,7 +9,7 @@ interface ProblemSectionProps {
 
 export function ProblemSection({ onExplore }: ProblemSectionProps) {
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="flex flex-col space-y-space-sm mb-space-xl">
         <span className="text-[11px] font-bold text-primary tracking-widest uppercase font-sans">
           THE ROUTINE DILEMMA

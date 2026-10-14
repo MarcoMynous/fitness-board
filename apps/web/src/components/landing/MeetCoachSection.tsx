@@ -9,15 +9,15 @@ interface MeetCoachSectionProps {
 
 export function MeetCoachSection({ onJoin }: MeetCoachSectionProps) {
   return (
-    <section className="w-full max-w-[1280px] mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-space-2xl">
+    <section className="w-full max-w-[1536px] mx-auto px-4 sm:px-8 lg:px-12 xl:px-16 py-space-xl lg:py-space-2xl">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
         {/* Left: Coach Image (5 cols) */}
         <div className="lg:col-span-5 relative">
-          <div className="w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-xl bg-surface-cream relative border border-border-subtle">
+          <div className="w-full aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl bg-surface-cream relative border border-border-subtle">
             <img
               alt="Coach Tolu in studio athletic wear laughing and holding water bottle"
               className="w-full h-full object-cover hover:scale-102 transition-transform duration-700"
-              src="https://lh3.googleusercontent.com/aida/AEtjO1VVTbNtduNSAJjTrtQIgXo4oELskgJRHbvma9kXDKEighjBj7knZ_IuK9qKFtTxPA78aaqnWkp9TcFonlx0tfL_lW6ZmH3ccbiISjy4JHpf4nmrb9xY8lcL_4ffipdmeJy_4GZrbdbNHcps6kSLriD3fBMg6bHZm4puR7uYxDIg0Bf496oQ24xyDqKETGXbcc-YoSuDcB0Rq3apdL4AeFhOeoUaDOh07TO4j8RdRYI5Y9CW4Qv3Eol4Bgk"
+              src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1200&q=85"
             />
 
             {/* Floating Tags */}
