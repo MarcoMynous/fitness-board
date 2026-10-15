@@ -17,12 +17,16 @@ import {
   FileCheck2,
   Mail,
 } from 'lucide-react';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const errorParam = searchParams.get('error');
   const reasonParam = searchParams.get('reason');
+
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -80,7 +84,10 @@ function SignInContent() {
       const res = await fetch('/api/auth/magic-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim() }),
+        body: JSON.stringify({
+          email: email.trim(),
+          turnstileToken: turnstileToken || undefined,
+        }),
       });
 
       const data = await res.json();
@@ -331,6 +338,19 @@ function SignInContent() {
                   )}
                 </div>
               </div>
+
+              {/* Cloudflare Turnstile Bot Verification */}
+              {turnstileSiteKey && (
+                <div className="flex justify-center my-1">
+                  <Turnstile
+                    siteKey={turnstileSiteKey}
+                    onSuccess={(token) => setTurnstileToken(token)}
+                    onError={() => setTurnstileToken(null)}
+                    onExpire={() => setTurnstileToken(null)}
+                    options={{ theme: 'light', size: 'flexible' }}
+                  />
+                </div>
+              )}
 
               {/* Submit CTA — NOT "send verification code" */}
               <button

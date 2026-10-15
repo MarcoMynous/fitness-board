@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@marsidev/react-turnstile": "^1.6.2",
     "@repo/auth": "workspace:*",
     "@repo/database": "workspace:*",
     "@repo/domain": "workspace:*",
