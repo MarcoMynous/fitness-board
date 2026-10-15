@@ -1,6 +1,30 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalDependencies": [".env*"],
+  "globalEnv": [
+    "NODE_ENV",
+    "DATABASE_URL",
+    "AUTH_SECRET",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_ADMIN_URL",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+    "TURNSTILE_SECRET_KEY",
+    "SMTP_HOST",
+    "SMTP_PORT",
+    "SMTP_SECURE",
+    "SMTP_USER",
+    "SMTP_PASSWORD",
+    "EMAIL_FROM",
+    "PAYSTACK_SECRET_KEY",
+    "PAYSTACK_PUBLIC_KEY",
+    "CLOUDFLARE_ACCOUNT_ID",
+    "CLOUDFLARE_API_TOKEN",
+    "S3_ENDPOINT",
+    "S3_ACCESS_KEY_ID",
+    "S3_SECRET_ACCESS_KEY",
+    "S3_BUCKET"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -20,6 +44,15 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:migrate": {
+      "cache": false
+    },
+    "db:seed": {
+      "cache": false
     }
   }
 }
