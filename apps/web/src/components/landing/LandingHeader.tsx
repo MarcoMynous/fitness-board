@@ -58,43 +58,11 @@ export function LandingHeader({
           >
             FAQ
           </a>
-          <Link
-            href="/sign-in"
-            className="text-[14px] font-semibold text-muted-charcoal hover:text-deep-charcoal transition-colors"
-          >
-            Log In
-          </Link>
         </nav>
 
-        {/* Actions & Currency Switcher */}
+        {/* Actions */}
         <div className="flex items-center gap-space-sm sm:gap-space-md">
-          {/* Currency Toggle */}
-          <div className="inline-flex p-0.5 rounded-lg bg-surface-cream border border-border-subtle text-[11px] font-bold">
-            <button
-              type="button"
-              onClick={() => setCurrency('NGN')}
-              className={`px-2 py-1 rounded-md transition-all ${
-                currency === 'NGN'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-muted-charcoal hover:text-deep-charcoal'
-              }`}
-            >
-              ₦ NGN
-            </button>
-            <button
-              type="button"
-              onClick={() => setCurrency('USD')}
-              className={`px-2 py-1 rounded-md transition-all ${
-                currency === 'USD'
-                  ? 'bg-primary text-on-primary shadow-xs'
-                  : 'text-muted-charcoal hover:text-deep-charcoal'
-              }`}
-            >
-              $ USD
-            </button>
-          </div>
-
-          {/* User Session or CTA */}
+          {/* User Session or Direct Navigation to Sign-in / Member Portal */}
           {user ? (
             <Link
               href="/home"
@@ -104,23 +72,13 @@ export function LandingHeader({
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           ) : (
-            <button
-              type="button"
-              onClick={onCheckout}
-              disabled={isLoading}
-              className="inline-flex items-center justify-center h-[44px] sm:h-[48px] px-4 sm:px-space-lg rounded-xl bg-primary text-on-primary font-bold text-[12px] sm:text-[13px] tracking-wider uppercase shadow-[0_4px_16px_-2px_rgba(154,64,35,0.25)] hover:bg-terracotta-hover active:scale-[0.99] transition-all"
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center justify-center h-[44px] sm:h-[48px] px-5 sm:px-space-lg rounded-xl bg-primary text-on-primary font-bold text-[12px] sm:text-[13px] tracking-wider uppercase shadow-[0_4px_16px_-2px_rgba(154,64,35,0.25)] hover:bg-terracotta-hover active:scale-[0.99] transition-all"
             >
-              {isLoading ? 'Loading...' : 'START NOW'}
-            </button>
+              SIGN UP
+            </Link>
           )}
-
-          <Link
-            href="/sign-in"
-            className="w-8 h-8 rounded-full bg-surface-cream border border-border-subtle flex items-center justify-center text-deep-charcoal hover:bg-primary hover:text-on-primary transition-colors"
-            title="Sign In"
-          >
-            <User className="w-4 h-4" />
-          </Link>
         </div>
       </div>
     </header>

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Dumbbell, Utensils, TrendingUp, Sparkles, Timer } from 'lucide-react';
 
 interface HeroSectionProps {
@@ -35,15 +36,13 @@ export function HeroSection({ onCheckout, isLoading }: HeroSectionProps) {
 
           {/* Actions */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-md pt-space-xs">
-            <button
-              type="button"
-              onClick={onCheckout}
-              disabled={isLoading}
+            <Link
+              href="/sign-in"
               className="inline-flex items-center justify-center gap-space-sm h-[56px] px-space-xl rounded-xl bg-primary text-on-primary font-bold text-[14px] sm:text-[15px] tracking-wider uppercase shadow-[0_4px_16px_-2px_rgba(154,64,35,0.25)] hover:bg-terracotta-hover transition-all active:scale-[0.99] group cursor-pointer"
             >
-              <span>{isLoading ? 'INITIALIZING...' : 'START MY TRANSFORMATION'}</span>
+              <span>START MY TRANSFORMATION</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </Link>
           </div>
 
           {/* Micro Trust */}

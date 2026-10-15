@@ -35,9 +35,6 @@ export function LandingFooter() {
             <a href="#faq" className="hover:text-primary transition-colors">
               FAQ
             </a>
-            <Link href="/sign-in" className="hover:text-primary transition-colors">
-              Login
-            </Link>
           </nav>
 
           <div className="flex items-center gap-space-md text-[11px] font-bold tracking-widest text-muted-charcoal">

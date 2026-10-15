@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   LandingHeader,
   HeroSection,
@@ -27,6 +28,7 @@ interface AuthUser {
 }
 
 export default function LandingPage() {
+  const router = useRouter();
   const [currency, setCurrency] = useState<'NGN' | 'USD'>('NGN');
   const [isLoading, setIsLoading] = useState(false);
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -43,32 +45,8 @@ export default function LandingPage() {
       .catch(() => {});
   }, []);
 
-  const handleCheckout = async () => {
-    try {
-      setIsLoading(true);
-      const res = await fetch('/api/checkout/create-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          productSlug: 'bundle', // Detty December Body Program
-          currency,
-        }),
-      });
-
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else if (data.simulatedUrl) {
-        window.location.href = data.simulatedUrl;
-      } else {
-        alert(data.error || 'Failed to initialize Paystack checkout.');
-      }
-    } catch (err) {
-      console.error('Checkout error:', err);
-      alert('Could not connect to payment gateway. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleCheckout = () => {
+    router.push('/sign-in');
   };
 
   const scrollToPricing = () => {
