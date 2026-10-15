@@ -20,10 +20,6 @@ export default async function MemberLayout({
     redirect('/sign-in');
   }
 
-  if (!user.onboardingCompleted) {
-    redirect('/onboarding');
-  }
-
   return (
     <DashboardLayoutClient user={user as any}>
       {children}

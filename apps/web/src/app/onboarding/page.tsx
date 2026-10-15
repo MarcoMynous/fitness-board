@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   OnboardingSidebar,
@@ -24,6 +24,18 @@ export default function OnboardingPage() {
   const [state, setState] = useState<OnboardingState>(INITIAL_ONBOARDING_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  // If user is already authenticated and verified, redirect directly to dashboard
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user?.onboardingCompleted) {
+          router.replace('/home');
+        }
+      })
+      .catch(() => {});
+  }, [router]);
 
   // Transition state for smooth fade animations
   const [isAnimating, setIsAnimating] = useState(false);

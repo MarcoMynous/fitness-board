@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
@@ -17,10 +17,23 @@ import {
 } from 'lucide-react';
 
 function CheckEmailContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || 'your email';
   const initialVerifyUrl = searchParams.get('verifyUrl');
   const deliveryNotice = searchParams.get('notice');
+
+  // If already authenticated and verified, redirect immediately to dashboard
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.user) {
+          router.replace('/home');
+        }
+      })
+      .catch(() => {});
+  }, [router]);
 
   const [resendCountdown, setResendCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);

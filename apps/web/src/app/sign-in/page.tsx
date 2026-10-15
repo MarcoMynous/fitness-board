@@ -36,17 +36,18 @@ function SignInContent() {
   const [resendCountdown, setResendCountdown] = useState<number>(0);
   const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
 
-  // Check if user is already signed in
+  // Check if user is already signed in — verified users are redirected directly to dashboard
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
           setCurrentUser(data.user);
+          router.replace('/home');
         }
       })
       .catch(() => {});
-  }, []);
+  }, [router]);
 
   // Handle resend countdown
   useEffect(() => {
@@ -77,6 +78,12 @@ function SignInContent() {
     e.preventDefault();
     if (!email || isLoading) return;
 
+    // If an authenticated user enters their email, redirect directly to dashboard
+    if (currentUser) {
+      router.replace('/home');
+      return;
+    }
+
     setIsLoading(true);
     setErrorMessage(null);
 
@@ -97,6 +104,7 @@ function SignInContent() {
         const query = new URLSearchParams({ email: email.trim() });
         if (data.devVerifyUrl) query.set('verifyUrl', data.devVerifyUrl);
         if (data.deliveryNotice) query.set('notice', data.deliveryNotice);
+        if (data.isVerified) query.set('verified', 'true');
         router.push(`/auth/check-email?${query.toString()}`);
       }
     } catch (err) {

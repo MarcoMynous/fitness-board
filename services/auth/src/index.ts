@@ -135,6 +135,7 @@ export async function requestMagicLink({
 
   return {
     success: true,
+    isVerified: !!existingUser,
     message: emailDeliveryNotice
       ? `SMTP notice: ${emailDeliveryNotice}`
       : 'A secure access link has been dispatched to your inbox.',
@@ -196,7 +197,7 @@ export async function verifyMagicLinkToken({
         email: consumedToken.email,
         role: 'member',
         status: 'active',
-        onboardingCompleted: false,
+        onboardingCompleted: true,
       })
       .returning();
 
@@ -207,11 +208,43 @@ export async function verifyMagicLinkToken({
     };
   }
 
-  // Update user lastSeenAt
+  // Ensure user is marked verified and active upon link consumption
   await db
     .update(users)
-    .set({ lastSeenAt: now })
+    .set({
+      lastSeenAt: now,
+      onboardingCompleted: true,
+    })
     .where(eq(users.id, user.id));
+
+  // Ensure an initial profile exists so dashboard components render seamlessly
+  if (!user.profile) {
+    const existingProfile = await db.query.profiles.findFirst({
+      where: eq(profiles.userId, user.id),
+    });
+
+    if (existingProfile) {
+      user.profile = existingProfile;
+    } else {
+      const emailPrefix = user.email.split('@')[0] || 'Member';
+      const cleanName = emailPrefix.charAt(0).toUpperCase() + emailPrefix.slice(1);
+      const [newProfile] = await db
+        .insert(profiles)
+        .values({
+          userId: user.id,
+          fullName: cleanName,
+          displayName: cleanName,
+          fitnessGoal: 'strength_hypertrophy',
+          experienceLevel: 'intermediate',
+          trainingEnvironment: 'commercial_gym',
+          dietaryPreferences: ['High Protein (Default)'],
+          weeklyWorkoutTarget: 4,
+          receiveWeeklyDigest: true,
+        })
+        .returning();
+      user.profile = newProfile;
+    }
+  }
 
   // Create session
   const sessionToken = generateToken();
@@ -238,7 +271,7 @@ export async function verifyMagicLinkToken({
     success: true,
     sessionToken,
     user,
-    route: !user.onboardingCompleted ? '/onboarding' : '/home',
+    route: '/home',
   };
 }
 

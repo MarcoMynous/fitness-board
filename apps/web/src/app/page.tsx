@@ -46,10 +46,18 @@ export default function LandingPage() {
   }, []);
 
   const handleCheckout = () => {
-    router.push('/sign-in');
+    if (user) {
+      router.push('/home');
+    } else {
+      router.push('/sign-in');
+    }
   };
 
   const scrollToPricing = () => {
+    if (user) {
+      router.push('/home');
+      return;
+    }
     const el = document.getElementById('pricing');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
