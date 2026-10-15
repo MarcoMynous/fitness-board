@@ -62,11 +62,11 @@ Production deployment should run on pushes to the protected `production` branch 
 Recommended GitHub secrets/configuration:
 
 - `DATABASE_URL`
-- `DIRECT_DATABASE_URL` where the migration provider requires it
 - `AUTH_SECRET`
-- `RESEND_API_KEY`
-- `STRIPE_SECRET_KEY`
-- `STRIPE_WEBHOOK_SECRET`
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, `EMAIL_FROM`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY`
+- `PAYSTACK_SECRET_KEY`, `PAYSTACK_PUBLIC_KEY`
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`
 - `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, `S3_BUCKET`
 - hosting-provider deployment token and project identifiers
 

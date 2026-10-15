@@ -1,15 +1,88 @@
-import { Resend } from 'resend';
+import nodemailer, { type Transporter } from 'nodemailer';
 import { renderMagicLinkEmail } from './templates/magicLink';
 import { renderPurchaseReceiptEmail } from './templates/purchaseReceipt';
 
-export function getResend() {
-  const key = process.env.RESEND_API_KEY;
-  return key ? new Resend(key) : null;
+export interface SmtpConfig {
+  host: string;
+  port: number;
+  secure: boolean;
+  auth?: {
+    user: string;
+    pass: string;
+  };
 }
 
-export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+let cachedTransporter: Transporter | null = null;
 
-// In-memory debug storage for local development testing
+export function getSmtpConfig(): SmtpConfig | null {
+  const host =
+    process.env.SMTP_HOST?.trim() ||
+    ((process.env.SMTP_USER?.includes('@gmail.com') || process.env.EMAIL_FROM?.includes('@gmail.com'))
+      ? 'smtp.gmail.com'
+      : '');
+
+  const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587;
+  const secure = process.env.SMTP_SECURE === 'true' || port === 465;
+
+  const rawUser = process.env.SMTP_USER?.trim() || process.env.EMAIL_FROM?.trim();
+  const rawPass = process.env.SMTP_PASSWORD?.trim();
+
+  if (!host && !rawPass) {
+    return null;
+  }
+
+  const effectiveHost = host || 'smtp.gmail.com';
+  // Strip spaces from password if it is formatted as Google App Password (4x4)
+  const effectivePass = rawPass ? rawPass.replace(/\s+/g, '') : '';
+  const effectiveUser = rawUser ? rawUser.replace(/.*<([^>]+)>.*/, '$1') : '';
+
+  return {
+    host: effectiveHost,
+    port,
+    secure,
+    ...(effectiveUser && effectivePass
+      ? {
+          auth: {
+            user: effectiveUser,
+            pass: effectivePass,
+          },
+        }
+      : {}),
+  };
+}
+
+export function getTransporter(): Transporter | null {
+  if (cachedTransporter) {
+    return cachedTransporter;
+  }
+
+  const config = getSmtpConfig();
+  if (!config) {
+    return null;
+  }
+
+  cachedTransporter = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    auth: config.auth,
+  });
+
+  return cachedTransporter;
+}
+
+export function getSenderEmail(): string {
+  const from = process.env.EMAIL_FROM?.trim();
+  if (!from) {
+    return 'Kinfolk & Core <ulonnamugochukwu@gmail.com>';
+  }
+  if (from.includes('<') && from.includes('>')) {
+    return from;
+  }
+  return `Kinfolk & Core <${from}>`;
+}
+
+// In-memory debug storage for development
 export const lastDevEmail: {
   recipient: string;
   subject: string;
@@ -26,40 +99,37 @@ export async function sendMagicLinkEmail({
 }) {
   const html = renderMagicLinkEmail({ verifyUrl, recipientEmail: email });
   const subject = 'Your Secure Access Link — Kinfolk & Core';
-  const client = getResend();
-  const from = process.env.RESEND_FROM_EMAIL || 'Kinfolk & Core <onboarding@resend.dev>';
+  const transporter = getTransporter();
+  const from = getSenderEmail();
 
-  if (!client) {
-    console.log('\n================== [DEV MAGIC LINK EMAIL] ==================');
+  if (!transporter) {
+    console.log('\n================== [DEV MAGIC LINK EMAIL (NODEMAILER MOCK)] ==================');
     console.log(`To: ${email}`);
+    console.log(`From: ${from}`);
     console.log(`Subject: ${subject}`);
     console.log(`Verification URL: ${verifyUrl}`);
-    console.log('============================================================\n');
+    console.log('==============================================================================\n');
 
     (globalThis as any).__LAST_DEV_MAGIC_LINK__ = {
       email,
       verifyUrl,
-      timestamp: new Date()
+      timestamp: new Date(),
     };
-    return { success: true, mode: 'dev_logged' };
+    return { success: true, mode: 'dev_mock' };
   }
 
   try {
-    const response = await client.emails.send({
+    const info = await transporter.sendMail({
       from,
-      to: [email],
+      to: email,
       subject,
       html,
     });
 
-    if (response.error) {
-      console.error('[Resend Magic Link Error]:', response.error);
-      throw new Error(response.error.message);
-    }
-
-    return { success: true, data: response.data };
+    console.log(`[Nodemailer SMTP] Magic link sent to ${email}: ${info.messageId}`);
+    return { success: true, data: { id: info.messageId } };
   } catch (error: any) {
-    console.error('Failed to send magic link via Resend:', error?.message || error);
+    console.error('Failed to send magic link via Nodemailer SMTP:', error?.message || error);
     throw error;
   }
 }
@@ -82,34 +152,30 @@ export async function sendPurchaseReceiptEmail({
     recipientEmail: email,
   });
   const subject = `Welcome to ${productName} — Kinfolk & Core`;
-  const client = getResend();
-  const from = process.env.RESEND_FROM_EMAIL || 'Kinfolk & Core <onboarding@resend.dev>';
+  const transporter = getTransporter();
+  const from = getSenderEmail();
 
-  if (!client) {
-    console.log('\n================== [DEV RECEIPT EMAIL] ==================');
+  if (!transporter) {
+    console.log('\n================== [DEV RECEIPT EMAIL (NODEMAILER MOCK)] ==================');
     console.log(`To: ${email}`);
     console.log(`Product: ${productName} (${amountFormatted})`);
     console.log(`Sign-In URL: ${verifyUrl}`);
-    console.log('=========================================================\n');
-    return { success: true, mode: 'dev_logged' };
+    console.log('===========================================================================\n');
+    return { success: true, mode: 'dev_mock' };
   }
 
   try {
-    const response = await client.emails.send({
+    const info = await transporter.sendMail({
       from,
-      to: [email],
+      to: email,
       subject,
       html,
     });
 
-    if (response.error) {
-      console.error('[Resend Receipt Error]:', response.error);
-      throw new Error(response.error.message);
-    }
-
-    return { success: true, data: response.data };
+    console.log(`[Nodemailer SMTP] Purchase receipt sent to ${email}: ${info.messageId}`);
+    return { success: true, data: { id: info.messageId } };
   } catch (error: any) {
-    console.error('Failed to send purchase receipt via Resend:', error?.message || error);
+    console.error('Failed to send purchase receipt via Nodemailer SMTP:', error?.message || error);
     throw error;
   }
 }

@@ -11,7 +11,7 @@
     "@repo/database": "workspace:*",
     "@repo/domain": "workspace:*",
     "@repo/email": "workspace:*",
-    "drizzle-orm": "^0.39.3",
+    "better-auth": "^1.7.9",
     "ioredis": "^5.6.0"
   },
   "devDependencies": {
@@ -20,4 +20,3 @@
     "typescript": "^5.8.2"
   }
 }
-

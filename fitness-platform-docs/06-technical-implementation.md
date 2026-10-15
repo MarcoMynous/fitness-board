@@ -6,11 +6,12 @@
 - **Applications:** Next.js with TypeScript in `apps/web` and `apps/admin`.
 - **UI:** Tailwind CSS with Radix primitives and branded components in `packages/ui`.
 - **Database:** PostgreSQL with Drizzle ORM and versioned migrations.
-- **Authentication:** Custom email magic links with secure sessions.
-- **Payments:** Stripe Checkout and signed, idempotent webhooks.
-- **Email:** Resend for receipts, magic links, and transactional notices.
-- **Media:** S3-compatible object storage for trainer photography, workout media, and recipe assets.
-- **Local services:** Docker Compose for PostgreSQL, Redis-compatible rate limiting, and optional supporting services.
+- **Authentication:** Better Auth for passwordless magic-link authentication with secure HTTP-only sessions.
+- **Payments:** Paystack & Stripe Checkout with signed, idempotent webhooks.
+- **Email:** Nodemailer connected to a configurable SMTP provider (Gmail, Brevo, Amazon SES, Mailgun) for magic links, receipts, and transactional notices. Local development supports Mailpit or Ethereal.
+- **Bot Protection:** Cloudflare Turnstile bot verification.
+- **Media:** S3-compatible object storage (Cloudflare R2) for trainer photography, workout media, and recipe assets.
+- **Local services:** Docker Compose for PostgreSQL, Redis rate limiting, and optional supporting services.
 - **Production:** Managed web hosting and managed data services by default; deployable Docker images remain available for portability.
 
 ## Monorepo conventions
@@ -21,9 +22,9 @@ apps/admin     # Admin Next.js application
 packages/ui    # Shared Tailwind/Radix component system
 packages/config # TypeScript, ESLint, Prettier, and shared tooling
 packages/domain # Shared types, schemas, and access rules
-packages/email  # Resend clients and email templates
-services/auth   # Magic-link and session service logic
-services/payments # Stripe checkout and webhook logic
+packages/email  # Nodemailer SMTP transport clients and responsive HTML email templates
+services/auth   # Better Auth magic-link generation, Turnstile verification, and session logic
+services/payments # Paystack/Stripe checkout and webhook logic
 database/       # Drizzle schema, migrations, and seed data
 ```
 
@@ -42,17 +43,18 @@ PostgreSQL is the source of truth for users, profiles, products, payments, entit
 
 ## Authentication implementation
 
-The auth service should:
+The auth service leverages Better Auth with Nodemailer SMTP transport:
 
 - accept the purchase email;
-- normalize and rate-limit requests;
-- create a random opaque token;
-- store only a hash, expiry, request metadata, and consumed state;
-- send the link through Resend;
-- verify expiry, signature/context, and one-time-use state;
+- verify client bot authenticity via Cloudflare Turnstile;
+- normalize and rate-limit requests via Redis sliding window;
+- create a cryptographically random opaque token (Better Auth magicLink);
+- store only a SHA-256 hash, expiry, request metadata, and consumed state;
+- dispatch the secure access link through Nodemailer via configured SMTP (Gmail, Brevo, SES, Mailgun, or Mailpit/Ethereal in dev);
+- verify expiry, signature/context, and one-time-use state atomically;
 - consume the token atomically;
-- create a secure session cookie;
-- route incomplete accounts to onboarding and complete accounts to the dashboard.
+- issue a secure, HTTP-only session cookie (`fitness_session_token`);
+- route incomplete accounts to onboarding and completed accounts to the dashboard.
 
 Invalid, expired, reused, or rate-limited requests must return safe generic messaging and must not reveal whether an email exists.
 

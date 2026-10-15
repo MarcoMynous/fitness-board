@@ -9,6 +9,7 @@ dotenv.config();
 
 export * from './schema';
 export { schema };
+export * from 'drizzle-orm';
 
 
 const connectionString =

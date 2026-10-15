@@ -39,9 +39,11 @@ AdminUser ── AuditEvent[]
 ## Security baseline
 
 - Use provider-hosted or provider-compliant checkout where possible; never store raw card data.
-- Hash magic-link tokens at rest and consume them atomically.
-- Rate-limit magic-link requests and admin authentication attempts.
-- Use secure, HttpOnly, SameSite session cookies and CSRF protection where applicable.
+- Better Auth passwordless magic-link tokens: cryptographically secure random bytes, hashed with SHA-256 at rest, 15-minute expiry, and consumed atomically.
+- SMTP email security: use verified production sender domain (`EMAIL_FROM`), secure TLS/STARTTLS connections (`SMTP_SECURE`), and restrict SMTP credentials (`SMTP_PASSWORD`) to server-side runtime environments only. Never expose SMTP keys to the client bundle.
+- Protect auth endpoints against bot abuse using Cloudflare Turnstile verification.
+- Rate-limit magic-link requests and admin authentication attempts using Redis sliding window algorithms.
+- Use secure, HttpOnly, SameSite session cookies (`fitness_session_token`) and CSRF protection where applicable.
 - Validate authorization on every protected server action, not only in navigation.
 - Minimize sensitive profile data; document retention and deletion behavior.
 - Keep immutable audit records for entitlement and admin content changes.

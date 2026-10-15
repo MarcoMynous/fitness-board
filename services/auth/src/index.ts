@@ -1,12 +1,12 @@
 import crypto from 'crypto';
-import { eq, and, gt, isNull } from 'drizzle-orm';
-import { db, users, payments, magicLinkTokens, sessions, entitlements, profiles, auditEvents } from '@repo/database';
+import { db, users, payments, magicLinkTokens, sessions, entitlements, profiles, auditEvents, eq, and, gt, isNull } from '@repo/database';
 import { sendMagicLinkEmail } from '@repo/email';
 import { checkRateLimit } from './ratelimit';
 import { verifyTurnstileToken } from './turnstile';
 
 export * from './ratelimit';
 export * from './turnstile';
+export * from './better-auth';
 
 export function hashToken(token: string): string {
   return crypto.createHash('sha256').update(token).digest('hex');
@@ -136,7 +136,7 @@ export async function requestMagicLink({
   return {
     success: true,
     message: emailDeliveryNotice
-      ? `Resend sandbox: ${emailDeliveryNotice}`
+      ? `SMTP notice: ${emailDeliveryNotice}`
       : 'A secure access link has been dispatched to your inbox.',
     deliveryNotice: emailDeliveryNotice,
     devVerifyUrl: verifyUrl,
