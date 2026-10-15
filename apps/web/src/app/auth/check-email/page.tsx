@@ -19,11 +19,13 @@ import {
 function CheckEmailContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || 'your email';
+  const initialVerifyUrl = searchParams.get('verifyUrl');
+  const deliveryNotice = searchParams.get('notice');
 
   const [resendCountdown, setResendCountdown] = useState(60);
   const [isResending, setIsResending] = useState(false);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
-  const [devVerifyUrl, setDevVerifyUrl] = useState<string | null>(null);
+  const [devVerifyUrl, setDevVerifyUrl] = useState<string | null>(initialVerifyUrl);
 
   // Auto-countdown for resend cooldown
   useEffect(() => {
@@ -178,6 +180,22 @@ function CheckEmailContent() {
               {email}
             </div>
           </div>
+
+          {/* Delivery Warning (e.g. Resend Sandbox notice) */}
+          {deliveryNotice && (
+            <div className="p-3.5 rounded-xl bg-[#c86241]/10 border border-[#c86241]/25 text-[12px] text-[#9b3d20] text-left space-y-1">
+              <div className="flex items-center gap-1.5 font-bold uppercase text-[10px] tracking-wider text-[#9b3d20]">
+                <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <span>Resend Test Mode Notice</span>
+              </div>
+              <p className="leading-relaxed text-[#736a5c]">
+                {deliveryNotice}
+              </p>
+              <p className="text-[11px] text-[#5c5650] pt-0.5">
+                On the free test domain, Resend delivers to your verified email: <strong className="text-[#1a1714]">ulonnamugochukwu3@gmail.com</strong>.
+              </p>
+            </div>
+          )}
 
           {/* Status Message */}
           {resendStatus && (

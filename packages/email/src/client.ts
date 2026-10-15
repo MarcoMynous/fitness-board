@@ -45,15 +45,21 @@ export async function sendMagicLinkEmail({
   }
 
   try {
-    const data = await client.emails.send({
+    const response = await client.emails.send({
       from,
-      to: email,
+      to: [email],
       subject,
       html,
     });
-    return { success: true, data };
-  } catch (error) {
-    console.error('Failed to send magic link via Resend:', error);
+
+    if (response.error) {
+      console.error('[Resend Magic Link Error]:', response.error);
+      throw new Error(response.error.message);
+    }
+
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Failed to send magic link via Resend:', error?.message || error);
     throw error;
   }
 }
@@ -89,15 +95,21 @@ export async function sendPurchaseReceiptEmail({
   }
 
   try {
-    const data = await client.emails.send({
+    const response = await client.emails.send({
       from,
-      to: email,
+      to: [email],
       subject,
       html,
     });
-    return { success: true, data };
-  } catch (error) {
-    console.error('Failed to send purchase receipt via Resend:', error);
+
+    if (response.error) {
+      console.error('[Resend Receipt Error]:', response.error);
+      throw new Error(response.error.message);
+    }
+
+    return { success: true, data: response.data };
+  } catch (error: any) {
+    console.error('Failed to send purchase receipt via Resend:', error?.message || error);
     throw error;
   }
 }

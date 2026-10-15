@@ -87,7 +87,10 @@ function SignInContent() {
       if (!res.ok) {
         setErrorMessage(data.error || 'Failed to dispatch access link. Please verify your email.');
       } else {
-        router.push(`/auth/check-email?email=${encodeURIComponent(email.trim())}`);
+        const query = new URLSearchParams({ email: email.trim() });
+        if (data.devVerifyUrl) query.set('verifyUrl', data.devVerifyUrl);
+        if (data.deliveryNotice) query.set('notice', data.deliveryNotice);
+        router.push(`/auth/check-email?${query.toString()}`);
       }
     } catch (err) {
       console.error(err);

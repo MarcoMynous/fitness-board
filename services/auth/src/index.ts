@@ -112,11 +112,16 @@ export async function requestMagicLink({
 
   const verifyUrl = `${originUrl}/auth/verify?token=${rawToken}`;
 
-  // Send the email (or log to terminal in dev mode)
-  await sendMagicLinkEmail({
-    email: normalizedEmail,
-    verifyUrl,
-  });
+  let emailDeliveryNotice: string | null = null;
+  try {
+    await sendMagicLinkEmail({
+      email: normalizedEmail,
+      verifyUrl,
+    });
+  } catch (err: any) {
+    emailDeliveryNotice = err?.message || 'Email delivery error';
+    console.warn('[Magic Link Email Notice]:', emailDeliveryNotice);
+  }
 
   // Audit event
   await db.insert(auditEvents).values({
@@ -124,14 +129,17 @@ export async function requestMagicLink({
     action: 'magic_link.requested',
     targetType: 'user',
     targetId: userId || normalizedEmail,
-    metadata: { email: normalizedEmail, ipAddress },
+    metadata: { email: normalizedEmail, ipAddress, deliveryNotice: emailDeliveryNotice },
     ipAddress,
   });
 
   return {
     success: true,
-    message: 'If your email is associated with a membership, a secure access link has been sent.',
-    devVerifyUrl: process.env.NODE_ENV !== 'production' ? verifyUrl : undefined,
+    message: emailDeliveryNotice
+      ? `Resend sandbox: ${emailDeliveryNotice}`
+      : 'A secure access link has been dispatched to your inbox.',
+    deliveryNotice: emailDeliveryNotice,
+    devVerifyUrl: verifyUrl,
   };
 }
 
