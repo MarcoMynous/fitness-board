@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import {
   ArrowLeft,
   ArrowRight,
@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 
 function SignInContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const errorParam = searchParams.get('error');
   const reasonParam = searchParams.get('reason');
@@ -86,11 +87,7 @@ function SignInContent() {
       if (!res.ok) {
         setErrorMessage(data.error || 'Failed to dispatch access link. Please verify your email.');
       } else {
-        setSubmitted(true);
-        setResendCountdown(60);
-        if (data.devVerifyUrl) {
-          setDevVerifyUrl(data.devVerifyUrl);
-        }
+        router.push(`/auth/check-email?email=${encodeURIComponent(email.trim())}`);
       }
     } catch (err) {
       console.error(err);

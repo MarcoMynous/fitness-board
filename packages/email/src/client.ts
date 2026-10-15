@@ -2,10 +2,12 @@ import { Resend } from 'resend';
 import { renderMagicLinkEmail } from './templates/magicLink';
 import { renderPurchaseReceiptEmail } from './templates/purchaseReceipt';
 
-const apiKey = process.env.RESEND_API_KEY;
-const fromEmail = process.env.RESEND_FROM_EMAIL || 'Fitness Platform <noreply@fitness.example.com>';
+export function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  return key ? new Resend(key) : null;
+}
 
-export const resend = apiKey ? new Resend(apiKey) : null;
+export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // In-memory debug storage for local development testing
 export const lastDevEmail: {
@@ -23,9 +25,11 @@ export async function sendMagicLinkEmail({
   verifyUrl: string;
 }) {
   const html = renderMagicLinkEmail({ verifyUrl, recipientEmail: email });
-  const subject = 'Your Secure Sign-In Link';
+  const subject = 'Your Secure Access Link — Kinfolk & Core';
+  const client = getResend();
+  const from = process.env.RESEND_FROM_EMAIL || 'Kinfolk & Core <onboarding@resend.dev>';
 
-  if (!resend) {
+  if (!client) {
     console.log('\n================== [DEV MAGIC LINK EMAIL] ==================');
     console.log(`To: ${email}`);
     console.log(`Subject: ${subject}`);
@@ -41,8 +45,8 @@ export async function sendMagicLinkEmail({
   }
 
   try {
-    const data = await resend.emails.send({
-      from: fromEmail,
+    const data = await client.emails.send({
+      from,
       to: email,
       subject,
       html,
@@ -71,9 +75,11 @@ export async function sendPurchaseReceiptEmail({
     verifyUrl,
     recipientEmail: email,
   });
-  const subject = `Your Access to ${productName}`;
+  const subject = `Welcome to ${productName} — Kinfolk & Core`;
+  const client = getResend();
+  const from = process.env.RESEND_FROM_EMAIL || 'Kinfolk & Core <onboarding@resend.dev>';
 
-  if (!resend) {
+  if (!client) {
     console.log('\n================== [DEV RECEIPT EMAIL] ==================');
     console.log(`To: ${email}`);
     console.log(`Product: ${productName} (${amountFormatted})`);
@@ -83,8 +89,8 @@ export async function sendPurchaseReceiptEmail({
   }
 
   try {
-    const data = await resend.emails.send({
-      from: fromEmail,
+    const data = await client.emails.send({
+      from,
       to: email,
       subject,
       html,
