@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Flame,
   Search,
@@ -550,6 +550,105 @@ export default function CookbookPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [savedRecipeIds, setSavedRecipeIds] = useState<string[]>(['suya-salmon-mash']);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [liveRecipes, setLiveRecipes] = useState<Recipe[]>([]);
+  const [isLoadingLive, setIsLoadingLive] = useState(true);
+
+  // Fetch live recipes from database
+  useEffect(() => {
+    async function fetchDatabaseRecipes() {
+      try {
+        const res = await fetch('/api/cookbook');
+        const data = await res.json();
+
+        if (data.recipes && Array.isArray(data.recipes) && data.recipes.length > 0) {
+          const mapped: Recipe[] = data.recipes.map((r: any) => {
+            let ingList: RecipeIngredient[] = [];
+            if (Array.isArray(r.ingredients) && r.ingredients.length > 0) {
+              if (typeof r.ingredients[0] === 'object' && r.ingredients[0] !== null) {
+                ingList = r.ingredients.map((x: any) => ({
+                  name: x.name || String(x),
+                  amount: x.amount || '',
+                }));
+              } else {
+                ingList = r.ingredients.map((x: any) => ({
+                  name: String(x),
+                  amount: '',
+                }));
+              }
+            }
+
+            let stList: RecipeStep[] = [];
+            if (Array.isArray(r.instructions) && r.instructions.length > 0) {
+              if (typeof r.instructions[0] === 'object' && r.instructions[0] !== null) {
+                stList = r.instructions.map((x: any, idx: number) => ({
+                  number: x.number || String(idx + 1).padStart(2, '0'),
+                  title: x.title || `Step ${idx + 1}`,
+                  instruction: x.instruction || String(x),
+                }));
+              } else {
+                stList = r.instructions.map((x: any, idx: number) => ({
+                  number: String(idx + 1).padStart(2, '0'),
+                  title: `Step ${idx + 1}`,
+                  instruction: String(x),
+                }));
+              }
+            }
+
+            const cal = r.calories || 450;
+            const prot = r.proteinGrams || 35;
+            const carbs = r.carbsGrams || 40;
+            const fat = r.fatGrams || 14;
+
+            return {
+              id: r.id || r.slug,
+              title: r.title,
+              subtitle: r.subtitle || 'LEAN MACRO TARGET',
+              description:
+                r.coachComment ||
+                'Nutrient-dense culinary formulation tailored for lean muscle repair and metabolic health.',
+              category: [
+                'all',
+                r.category,
+                ...(Array.isArray(r.tags) ? r.tags.map((t: string) => t.toLowerCase()) : []),
+              ],
+              prepTime: `${r.prepTimeMinutes || 20} min`,
+              servings: r.servings || '2 bowls',
+              protein: `${prot}g`,
+              calories: `${cal} kcal`,
+              fiber: `${r.fiberGrams || 7}G`,
+              sodium: `${r.sodiumMg || 300}MG`,
+              macroSplit: `${Math.round(((prot * 4) / cal) * 100)}% Protein • ${Math.round(
+                ((carbs * 4) / cal) * 100
+              )}% Carbs • ${Math.round(((fat * 9) / cal) * 100)}% Fats`,
+              badge: r.subtitle || 'High Protein',
+              fusionTag: (Array.isArray(r.tags) && r.tags[0]) || 'WEST AFRICAN FUSION',
+              rating: '★ 4.9 (180+ reviews)',
+              imageUrl: r.imageUrl || FEATURED_HERO_RECIPE.imageUrl,
+              coachTip: r.coachComment || FEATURED_HERO_RECIPE.coachTip,
+              tags: Array.isArray(r.tags) && r.tags.length > 0 ? r.tags : ['High Protein', 'Gluten-Free'],
+              ingredientsList:
+                ingList.length > 0 ? ingList : FEATURED_HERO_RECIPE.ingredientsList,
+              stepsList: stList.length > 0 ? stList : FEATURED_HERO_RECIPE.stepsList,
+              ingredients: ingList.map((i) => `${i.amount ? i.amount + ' ' : ''}${i.name}`),
+              steps: stList.map((s) => s.instruction),
+            };
+          });
+
+          setLiveRecipes(mapped);
+        }
+
+        if (Array.isArray(data.savedRecipeIds)) {
+          setSavedRecipeIds(data.savedRecipeIds);
+        }
+      } catch (err) {
+        console.error('Error fetching live recipes:', err);
+      } finally {
+        setIsLoadingLive(false);
+      }
+    }
+
+    fetchDatabaseRecipes();
+  }, []);
 
   // Interactive Checklist and Action States
   const [checkedIngredients, setCheckedIngredients] = useState<string[]>([]);
@@ -576,9 +675,11 @@ export default function CookbookPage() {
     );
   };
 
+  const recipesSource = liveRecipes.length > 0 ? liveRecipes : RECIPES_LIBRARY;
+
   const filteredRecipes = useMemo(() => {
     const q = search.trim().toLowerCase();
-    return RECIPES_LIBRARY.filter((recipe) => {
+    return recipesSource.filter((recipe) => {
       const matchesCategory =
         selectedCategory === 'all' ||
         recipe.category.includes(selectedCategory.toLowerCase());
@@ -589,7 +690,7 @@ export default function CookbookPage() {
         recipe.ingredients.some((ing) => ing.toLowerCase().includes(q));
       return matchesCategory && matchesSearch;
     });
-  }, [search, selectedCategory]);
+  }, [search, selectedCategory, recipesSource]);
 
   const checkedCount = selectedRecipe
     ? checkedIngredients.filter((name) =>

@@ -12,9 +12,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const hasAccess = hasCookbookAccess(user.entitlements as any);
+  const hasAccess = user.role === 'admin' || hasCookbookAccess(user.entitlements as any);
   if (!hasAccess) {
-    return NextResponse.json({ hasAccess: false });
+    return NextResponse.json({ hasAccess: false, recipes: [] });
   }
 
   const allRecipes = await db.query.recipes.findMany({

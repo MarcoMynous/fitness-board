@@ -57,7 +57,7 @@ const INITIAL_PAST_RECORDS: CheckInRecord[] = [
       reviewedAt: 'Oct 10, 2026 • 19:40 WAT',
       coachName: 'Coach Tolu Adebayo',
       feedback:
-        'Amaka, your compound lifts in Week 2 were remarkably grounded. Remember: fluid fluctuations are standard. Trust your steady nourishment and keep honoring the recovery blocks.',
+        'Your compound lifts in Week 2 were remarkably grounded. Remember: fluid fluctuations are standard. Trust your steady nourishment and keep honoring the recovery blocks.',
     },
   },
   {
@@ -117,7 +117,7 @@ const INITIAL_PAST_RECORDS: CheckInRecord[] = [
 ];
 
 export default function ProgressPage() {
-  const [userName, setUserName] = useState<string>('Amaka');
+  const [userName, setUserName] = useState<string>('Member');
   const [unit, setUnit] = useState<'KG' | 'LBS'>('KG');
   const [weight, setWeight] = useState<string>('74.6');
   const [waist, setWaist] = useState<string>('82.0');
@@ -143,11 +143,12 @@ export default function ProgressPage() {
           const name =
             data.user.profile?.displayName ||
             data.user.profile?.fullName?.split(' ')[0] ||
-            'Amaka';
+            data.user.email?.split('@')[0] ||
+            'Member';
           setUserName(name);
         }
       })
-      .catch(() => {});
+      .catch((err) => console.error('Error fetching user for progress:', err));
   }, []);
 
   const handleSaveCheckIn = () => {

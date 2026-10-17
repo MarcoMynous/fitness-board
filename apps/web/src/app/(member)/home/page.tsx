@@ -10,6 +10,9 @@ import {
   Check,
 } from 'lucide-react';
 
+import { db, workoutCompletions, recipes } from '@repo/database';
+import { eq, desc } from 'drizzle-orm';
+
 export const dynamic = 'force-dynamic';
 
 export default async function MemberHomePage() {
@@ -19,12 +22,34 @@ export default async function MemberHomePage() {
 
   if (!user) return null;
 
-  // Real onboarding fields
-  const displayName = user.profile?.displayName || user.profile?.fullName?.split(' ')[0] || 'Amaka';
+  // Real user fields from database session
+  const displayName =
+    user.profile?.displayName ||
+    user.profile?.fullName?.split(' ')[0] ||
+    user.email.split('@')[0];
   const rawGoal = user.profile?.fitnessGoal || 'strength_hypertrophy';
   const experienceLevel = user.profile?.experienceLevel || 'Intermediate';
   const weeklyTarget = user.profile?.weeklyWorkoutTarget || 4;
   const environment = user.profile?.trainingEnvironment || 'Commercial Gym';
+
+  // Live database queries for user completions & latest recipe
+  const [completions, latestRecipe] = await Promise.all([
+    db.query.workoutCompletions.findMany({
+      where: eq(workoutCompletions.userId, user.id),
+      orderBy: [desc(workoutCompletions.completedAt)],
+    }),
+    db.query.recipes.findFirst({
+      where: eq(recipes.status, 'published'),
+      orderBy: [desc(recipes.createdAt)],
+    }),
+  ]);
+
+  const now = new Date();
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(now.getDate() - 7);
+  const doneThisWeek = completions.filter(
+    (c) => new Date(c.completedAt) >= oneWeekAgo
+  ).length;
 
   // Map raw goal to luxury editorial title
   const goalMap: Record<string, string> = {
@@ -53,7 +78,7 @@ export default async function MemberHomePage() {
         <div className="flex items-center gap-2 self-start sm:self-auto">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#cde5d7] text-[#0a1f17] text-[11px] font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-[#4d6358]" />
-            <span>3 of {weeklyTarget} Done This Week</span>
+            <span>{doneThisWeek} of {weeklyTarget} Done This Week</span>
           </span>
         </div>
       </div>
@@ -219,39 +244,41 @@ export default async function MemberHomePage() {
                 Daily Nourish
               </span>
               <span className="text-[11px] font-bold text-[#4d6358] bg-[#cde5d7] px-2.5 py-0.5 rounded-md">
-                42g Protein
+                {latestRecipe ? `${latestRecipe.proteinGrams}g Protein` : '42g Protein'}
               </span>
             </div>
 
             <div className="relative h-44 w-full rounded-2xl overflow-hidden bg-[#1C1A18] shadow-xs">
               <img
-                alt="Grilled Chicken Jollof Bowl"
+                alt={latestRecipe?.title || 'Daily Nourish'}
                 className="w-full h-full object-cover filter brightness-95"
-                src="/images/jollof-bowl.jpg"
+                src={latestRecipe?.imageUrl || '/images/jollof-bowl.jpg'}
               />
               <div className="absolute top-3 left-3 px-2 py-0.5 rounded-md bg-[#1C1A18]/80 text-white text-[10px] font-bold tracking-wider uppercase">
-                Dinner Fuel
+                {latestRecipe?.category || 'Dinner Fuel'}
               </div>
             </div>
 
             <div>
               <h3 className="font-serif text-[19px] font-bold text-[#1d1b19] leading-tight">
-                Grilled Chicken Brown Jollof Bowl
+                {latestRecipe?.title || 'Grilled Chicken Brown Jollof Bowl'}
               </h3>
-              <p className="text-[12px] text-[#56423d] leading-relaxed mt-1">
-                Smoky spiced chicken breast over brown jollof grain with roasted plantain dodo and avocado slices.
+              <p className="text-[12px] text-[#56423d] leading-relaxed mt-1 line-clamp-2">
+                {latestRecipe?.coachComment ||
+                  'Smoky spiced chicken breast over brown jollof grain with roasted plantain dodo and avocado slices.'}
               </p>
             </div>
           </div>
 
           <div className="pt-2 border-t border-[#E4DDD3]/70 flex items-center justify-between">
-            <span className="text-[11px] text-[#786b66] font-medium">Prep: 25 mins</span>
+            <span className="text-[11px] text-[#786b66] font-medium">
+              Prep: {latestRecipe ? `${latestRecipe.prepTimeMinutes + latestRecipe.cookTimeMinutes} mins` : '25 mins'}
+            </span>
             <Link
               href="/cookbook"
               className="text-[12px] font-bold text-[#9a4023] hover:underline flex items-center gap-1"
             >
-              <span>Explore Cookbook (45+ Recipes)</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <span>Explore Cookbook →</span>
             </Link>
           </div>
         </div>

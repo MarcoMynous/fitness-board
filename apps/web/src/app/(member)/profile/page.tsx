@@ -29,17 +29,17 @@ import {
 export default function ProfilePage() {
   // User Profile State
   const [userProfile, setUserProfile] = useState({
-    name: 'Amaka Okafor',
-    email: 'amaka.okafor@email.com',
+    name: 'Member',
+    email: '',
     location: 'Lagos, Nigeria • WAT',
-    tier: 'Pro All-Access Active',
-    mainGoal: 'Lose body fat & sculpt curves',
-    startingWeight: '78.0 kg',
-    currentWeight: '74.6 kg',
-    weightDelta: '-3.4 kg',
-    height: '168 cm',
-    trainingLevel: 'Beginner / Intermediate',
-    sanctuary: 'Commercial Gym (Eko Fitness, VI)',
+    tier: 'Protocol Access Active',
+    mainGoal: 'Lean Hypertrophy & Resiliency',
+    startingWeight: '75.0 kg',
+    currentWeight: '73.2 kg',
+    weightDelta: '-1.8 kg',
+    height: '172 cm',
+    trainingLevel: 'Intermediate',
+    sanctuary: 'Commercial Gym',
     coach: 'Coach Tolu Adebayo',
     coachRole: 'Active Mentor',
   });
@@ -53,66 +53,119 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Form states for Edit Profile Modal
-  const [editName, setEditName] = useState(userProfile.name);
-  const [editEmail, setEditEmail] = useState(userProfile.email);
-  const [editLocation, setEditLocation] = useState(userProfile.location);
+  const [editName, setEditName] = useState('');
+  const [editEmail, setEditEmail] = useState('');
+  const [editLocation, setEditLocation] = useState('Lagos, Nigeria • WAT');
 
   // Form states for Baseline Modal
-  const [editGoal, setEditGoal] = useState(userProfile.mainGoal);
-  const [editWeight, setEditWeight] = useState(userProfile.currentWeight.replace(' kg', ''));
-  const [editSanctuary, setEditSanctuary] = useState(userProfile.sanctuary);
+  const [editGoal, setEditGoal] = useState('Lean Hypertrophy & Resiliency');
+  const [editWeight, setEditWeight] = useState('73.2');
+  const [editSanctuary, setEditSanctuary] = useState('Commercial Gym');
 
-  // Hydrate user from auth session
+  // Hydrate user from auth session & live database profile
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
           const u = data.user;
-          const fullName = u.profile?.fullName || u.profile?.displayName || 'Amaka Okafor';
+          const fullName =
+            u.profile?.fullName ||
+            u.profile?.displayName ||
+            u.email?.split('@')[0] ||
+            'Member';
+          const email = u.email || '';
+          const rawGoal = u.profile?.fitnessGoal || 'strength_hypertrophy';
+          const trainingActive = u.entitlements?.some(
+            (e: any) => e.accessType === 'training' && e.status === 'active'
+          );
+          const cookbookActive = u.entitlements?.some(
+            (e: any) => e.accessType === 'cookbook' && e.status === 'active'
+          );
+          const tier =
+            trainingActive && cookbookActive
+              ? 'Complete All-Access Active'
+              : trainingActive
+              ? 'Training Protocol Active'
+              : cookbookActive
+              ? 'Culinary Kitchen Active'
+              : 'Member Access';
+
+          const formattedGoal = rawGoal.replace(/_/g, ' ');
+          const formattedEnv =
+            u.profile?.trainingEnvironment?.replace(/_/g, ' ') || 'Commercial Gym';
+
           setUserProfile((prev) => ({
             ...prev,
             name: fullName,
-            email: u.email || prev.email,
-            mainGoal: u.profile?.fitnessGoal?.replace('_', ' ') || prev.mainGoal,
+            email: email,
+            tier: tier,
+            mainGoal: formattedGoal,
             trainingLevel: u.profile?.experienceLevel || prev.trainingLevel,
-            sanctuary: u.profile?.trainingEnvironment?.replace('_', ' ') || prev.sanctuary,
+            sanctuary: formattedEnv,
           }));
           setEditName(fullName);
-          setEditEmail(u.email || 'amaka.okafor@email.com');
+          setEditEmail(email);
+          setEditGoal(formattedGoal);
+          setEditSanctuary(formattedEnv);
         }
       })
-      .catch(() => {});
+      .catch((err) => console.error('Error hydrating profile:', err));
   }, []);
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    setTimeout(() => {
-      setUserProfile((prev) => ({
-        ...prev,
-        name: editName,
-        email: editEmail,
-        location: editLocation,
-      }));
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullName: editName, displayName: editName }),
+      });
+      const data = await res.json();
+      if (data.success && data.profile) {
+        setUserProfile((prev) => ({
+          ...prev,
+          name: data.profile.fullName || editName,
+          email: editEmail,
+          location: editLocation,
+        }));
+      }
+    } catch (err) {
+      console.error('Error saving profile:', err);
+    } finally {
       setIsSaving(false);
       setEditProfileOpen(false);
-    }, 400);
+    }
   };
 
-  const handleSaveBaseline = (e: React.FormEvent) => {
+  const handleSaveBaseline = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSaving(true);
-    setTimeout(() => {
-      setUserProfile((prev) => ({
-        ...prev,
-        mainGoal: editGoal,
-        currentWeight: `${editWeight} kg`,
-        sanctuary: editSanctuary,
-      }));
+    try {
+      const res = await fetch('/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fitnessGoal: editGoal.toLowerCase().replace(/\s+/g, '_'),
+          trainingEnvironment: editSanctuary.toLowerCase().replace(/\s+/g, '_'),
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUserProfile((prev) => ({
+          ...prev,
+          mainGoal: editGoal,
+          currentWeight: `${editWeight} kg`,
+          sanctuary: editSanctuary,
+        }));
+      }
+    } catch (err) {
+      console.error('Error saving baseline:', err);
+    } finally {
       setIsSaving(false);
       setBaselineModalOpen(false);
-    }, 400);
+    }
   };
 
   return (
