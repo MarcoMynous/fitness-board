@@ -15,50 +15,124 @@ import {
   Leaf,
   CheckCircle2,
   UtensilsCrossed,
+  ShoppingCart,
+  CalendarCheck,
+  Check,
+  CookingPot,
+  PieChart,
+  ListChecks,
+  Dumbbell,
 } from 'lucide-react';
+
+interface RecipeIngredient {
+  name: string;
+  amount: string;
+}
+
+interface RecipeStep {
+  number: string;
+  title: string;
+  instruction: string;
+}
 
 interface Recipe {
   id: string;
   title: string;
+  subtitle: string;
   description: string;
   category: string[];
   prepTime: string;
+  servings: string;
   protein: string;
   calories: string;
-  fiber?: string;
+  fiber: string;
+  sodium: string;
+  macroSplit: string;
   badge: string;
+  fusionTag: string;
+  rating: string;
   imageUrl: string;
+  coachTip: string;
+  tags: string[];
+  ingredientsList: RecipeIngredient[];
+  stepsList: RecipeStep[];
   ingredients: string[];
   steps: string[];
 }
 
 const FEATURED_HERO_RECIPE: Recipe = {
   id: 'featured-jollof-cauliflower',
-  title: 'Grilled Chicken Jollof Cauliflower Bowl',
+  title: 'Grilled Chicken Jollof Bowl',
+  subtitle: 'POST-WORKOUT FUEL — PHASE 2 MACRO TARGET',
   description:
-    'A high-protein, fiber-rich twist on the classic Lagos staple. Fire-roasted bell pepper and scotch bonnet reduction folded through tender cauliflower grains, golden air-fried plantain dices, and succulent spiced chicken breast.',
+    'A nutrient-dense West African classic adapted for lean muscle recovery with slow-release carbs and rich aromatic spices.',
   category: ['all', 'dinner', 'lunch', 'high protein'],
   prepTime: '25 min',
+  servings: '2 bowls',
   protein: '42g',
-  calories: '460 kcal',
+  calories: '480 kcal',
+  fiber: '9G',
+  sodium: '340MG',
+  macroSplit: '35% Protein • 45% Complex Carbs • 20% Healthy Fats',
   badge: 'LEAN CARBS • HIGH FIBER',
+  fusionTag: 'WEST AFRICAN FUSION',
+  rating: '★ 4.9 (184 reviews)',
   imageUrl:
     'https://lh3.googleusercontent.com/aida-public/AB6AXuDBL2og1WbUbmHiUMkN1TLOPpvgTxfDKxAJqmOOEL-yXryBBsJiuKfqMi9tJLi9Qkmn-a6tys6QQDs-y1LIXyv9-a8mJC_aWcykEBp6gqBtFw62HZfcKzu8-mHASDYzIzZXUR3xEEmJInDQt3gzHm8p8YEPtAemJV2FF-LIAvBfGuv2SNaNqBvip05H6NloKRTn7PY1AYCDz4AtltajzgOcB3eRE0lVrtkOtWo7JWKAs54xWRTvrCotvg',
+  coachTip:
+    'Yes, jollof rice is 100% allowed on this program! We balance the glycemic response by incorporating cauliflower grains and loading up on seasoned grilled chicken breast. Enjoy every bite guilt-free.',
+  tags: ['Gluten-Free', 'Meal Prep Friendly', 'Lagos Studio Favorite'],
+  ingredientsList: [
+    { name: 'Chicken breast, sliced & seasoned in suya spices', amount: '250g' },
+    { name: 'Brown rice or parboiled rice blend', amount: '1 cup' },
+    { name: 'Grated cauliflower rice', amount: '1 cup' },
+    { name: 'Plum tomatoes & red bell pepper (tatashe)', amount: '3 large / 1 red' },
+    { name: 'Red onion & scotch bonnets (atarodo)', amount: '1 med / 2 peppers' },
+    { name: 'Cold-pressed olive oil or coconut oil', amount: '1 tbsp' },
+    { name: 'Fresh thyme, curry powder, and sea salt', amount: 'To taste' },
+    { name: 'Ripe avocado & roasted plantain slices for garnish', amount: '1/2 avocado' },
+  ],
+  stepsList: [
+    {
+      number: '01',
+      title: 'Sear the Protein',
+      instruction:
+        'Season and sear the chicken breast until deeply golden. Use a heavy cast iron or grill pan over medium-high heat with half of the cold-pressed oil to lock in juices and give that authentic flame-kissed aroma.',
+    },
+    {
+      number: '02',
+      title: 'Aromatic Base',
+      instruction:
+        'Blend tomatoes, peppers, and onions into a smooth aromatic paste. Reduce this pepper reduction in a saucepan with thyme and curry powder until the natural oils rise to the surface, creating that quintessential jollof profile.',
+    },
+    {
+      number: '03',
+      title: 'Simmer & Steam Grains',
+      instruction:
+        'Simmer sauce, fold in grains, and steam until fluffy. Add the brown rice first with low-sodium chicken stock, then introduce the cauliflower grains in the final 5 minutes to preserve crunch and maximize fiber volume.',
+    },
+    {
+      number: '04',
+      title: 'Bowl Assembly',
+      instruction:
+        'Assemble bowl with avocado slices and grilled protein. Top with air-fried golden plantain discs, fresh lime wedges, toasted pumpkin seeds, and chopped spring onions for a restorative post-session feast.',
+    },
+  ],
   ingredients: [
-    '250g Skinless Chicken Breast (seasoned with thyme, garlic, smoked paprika)',
-    '1 Head Fresh Cauliflower (grated into rice grains)',
-    '3 Red Bell Peppers (Tatashe) & 2 Scotch Bonnets (Rodo), oven-roasted',
-    '1 Medium Ripe Plantain (cubed & air-fried with spray olive oil)',
-    '1/2 Medium Avocado (sliced for essential fats)',
-    '1 tbsp Cold-Pressed Coconut Oil or Olive Oil',
-    'Fresh Cilantro, Lime Wedges & Cherry Tomatoes for garnish',
+    '250g Chicken breast, sliced & seasoned in suya spices',
+    '1 cup Brown rice or parboiled rice blend',
+    '1 cup Grated cauliflower rice',
+    '3 large Plum tomatoes & 1 red bell pepper (tatashe)',
+    '1 med Red onion & 2 scotch bonnets (atarodo)',
+    '1 tbsp Cold-pressed olive oil or coconut oil',
+    'Fresh thyme, curry powder, and sea salt to taste',
+    '1/2 Ripe avocado & roasted plantain slices for garnish',
   ],
   steps: [
-    'Blend the fire-roasted bell peppers, scotch bonnets, onion, and fresh ginger into a smooth reduction.',
-    'Season and pan-sear the chicken breast for 6–7 minutes per side until golden and internal temperature reaches 75°C. Rest and slice.',
-    'In a wide skillet, heat olive oil and simmer the pepper reduction for 8 minutes until aromatic, then fold in the riced cauliflower for 4 minutes until tender-crisp.',
-    'Assemble your bowl: Jollof cauliflower base, sliced chicken breast, golden air-fried plantain cubes, and sliced avocado.',
-    'Finish with a squeeze of fresh lime and chopped cilantro. Serve warm.',
+    'Season and sear chicken breast until golden on a heavy grill pan.',
+    'Blend and reduce tomatoes, peppers, and onions into a rich fragrant jollof sauce.',
+    'Simmer brown rice in savory stock, folding in cauliflower rice for the last 5 minutes.',
+    'Assemble bowl with sliced protein, plantain discs, fresh avocado, and lime.',
   ],
 };
 
@@ -66,153 +140,391 @@ const RECIPES_LIBRARY: Recipe[] = [
   {
     id: 'suya-salmon-mash',
     title: 'Suya Spiced Salmon & Plantain Mash',
+    subtitle: 'OMEGA-3 RESTORATION — LEAN PROTOCOL',
     description:
       'Heart-healthy omega-3s meet northern Nigerian yaji seasoning. Paired with low-GI green plantain purée and steamed greens.',
     category: ['all', 'high protein', 'dinner', 'lunch'],
-    prepTime: '20 MIN',
-    protein: '38g Protein',
+    prepTime: '20 min',
+    servings: '1 bowl',
+    protein: '38g',
     calories: '490 kcal',
+    fiber: '7G',
+    sodium: '290MG',
+    macroSplit: '32% Protein • 38% Complex Carbs • 30% Healthy Fats',
     badge: 'High Protein',
+    fusionTag: 'NORTHERN HERITAGE',
+    rating: '★ 5.0 (212 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBLOUUv16tdJKMYMTzyTzFiHbFL5TLYXW0ws7-qUZMPmT51T_m8aaRRdP4eRVgInPCUm2Fu0yl4kXhLuxfy_c1Xji9OwCq8RRjjhR2hjyoejJt3vxIc0JhGBQf0wDkt1kMTwYTGLQ8As5OLsV3mbo_Uw_YRaCahgtYpK8ivPaC_AmK6WBUlzqDVokgsL2gRCppRgAeCTbOZOvULEN4FO4qXGDoFFw3iJPHYZ-kXpiPl2slRYOwZqkAuJA',
+    coachTip:
+      'Salmon skin contains collagen and concentrated astaxanthin. Searing skin-down first retains moisture while giving that irresistible crisp texture.',
+    tags: ['High Omega-3', 'Anti-Inflammatory', 'Studio Favorite'],
+    ingredientsList: [
+      { name: 'Wild Atlantic Salmon Fillet', amount: '200g' },
+      { name: 'Authentic Northern Suya Yaji Rub (kuli-kuli, ginger, pepper)', amount: '1.5 tbsp' },
+      { name: 'Semi-Ripe Green Plantains (peeled & steamed)', amount: '2 medium' },
+      { name: 'Steamed Ugu (Pumpkin leaves) or Baby Spinach', amount: '1 cup' },
+      { name: 'Extra Virgin Olive Oil', amount: '1 tsp' },
+      { name: 'Fresh Lime', amount: '1 whole' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Spice Crust Application',
+        instruction: 'Coat salmon fillet evenly with roasted suya yaji spice rub and gentle pinch of flaked sea salt.',
+      },
+      {
+        number: '02',
+        title: 'Cast Iron Sear',
+        instruction: 'Pan-sear skin-side down in pre-heated cast iron for 4 minutes until crisp, flip for 2-3 minutes.',
+      },
+      {
+        number: '03',
+        title: 'Plantain Velouté Mash',
+        instruction: 'Boil green plantains in salted broth until tender, then crush coarsely with cold-pressed olive oil.',
+      },
+      {
+        number: '04',
+        title: 'Plating & Greens',
+        instruction: 'Bed the salmon on velvety plantain mash, garnish with quick-wilted ugu greens and lime squeeze.',
+      },
+    ],
     ingredients: [
       '200g Wild Atlantic Salmon Fillet',
-      '1.5 tbsp Authentic Northern Suya Yaji Rub (kuli-kuli, ginger, pepper)',
-      '2 Semi-Ripe Green Plantains (peeled and boiled with sea salt)',
-      '1 cup Steamed Ugu (Pumpkin leaves) or Baby Spinach',
-      '1 tsp Extra Virgin Olive Oil',
-      '1 Fresh Lime',
+      '1.5 tbsp Authentic Northern Suya Yaji Rub',
+      '2 Semi-Ripe Green Plantains',
+      '1 cup Steamed Ugu or Baby Spinach',
+      '1 tsp Extra Virgin Olive Oil & 1 Lime',
     ],
     steps: [
-      'Rub salmon fillet evenly with suya yaji spice and a drop of olive oil.',
-      'Pan-sear on a hot cast iron skillet skin-side down for 4 minutes, flip and cook for 3 minutes.',
-      'Mash the warm boiled green plantains with a fork, folding in 1 tsp olive oil and a splash of boiling broth.',
-      'Plate the salmon atop the velvety plantain mash alongside steamed greens and fresh lime.',
+      'Rub salmon fillet evenly with suya yaji spice and olive oil.',
+      'Pan-sear on hot cast iron skillet for 4 minutes skin-down, flip for 3 minutes.',
+      'Mash warm boiled green plantains with olive oil and broth.',
+      'Plate salmon atop plantain mash alongside steamed greens.',
     ],
   },
   {
     id: 'mackerel-garden-egg-stew',
     title: 'Smoked Mackerel & Garden Egg Stew',
+    subtitle: 'METABOLIC FIBER BOOST — GUT SANCTUARY',
     description:
       'Silky simmered African eggplant with aromatic smoked fish, packed with prebiotic fiber to stabilize glucose.',
     category: ['all', 'lunch', 'dinner', 'high protein'],
-    prepTime: '30 MIN',
-    protein: '34g Protein',
-    fiber: '11g Fiber',
+    prepTime: '30 min',
+    servings: '2 bowls',
+    protein: '34g',
     calories: '380 kcal',
+    fiber: '11G',
+    sodium: '310MG',
+    macroSplit: '36% Protein • 34% Complex Carbs • 30% Healthy Fats',
     badge: 'High Fiber',
+    fusionTag: 'INDIGENOUS BIO-ACTIVE',
+    rating: '★ 4.8 (94 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAxdimTR_-Ed_N_geS8lRuYW3PEZC_Hh1hNnFsd3_-jB5-NtxihFagaYsleO20jdGu5uKWQCld5BLjNj-JFfNtOog0ViGOsI61l_65Al1uRsD-AFscPrHB7cZk-7IdvrUeSHTGtQfZBj6uiIxT_oznBderBoK1LUPS_Z2kNRT1rPOS9TvgK4FmIPGv4n6GN1fCbNblDYjEiU3HUkT43wA6kN5BSsQV9J_cY35MdiYjPRXVoLWjkcsWK9A',
+    coachTip:
+      'Garden eggs act like sponges for the rich fish oils and pepper reduction, giving maximum satiety with ultra-low caloric density.',
+    tags: ['Prebiotic Rich', 'Blood Sugar Friendly', 'Low Glycemic'],
+    ingredientsList: [
+      { name: 'Garden Eggs (African aubergines), boiled & crushed', amount: '300g' },
+      { name: 'Hardwood-Smoked Mackerel (deboned & flaked)', amount: '1 whole' },
+      { name: 'Plum Tomatoes & Habanero base', amount: '3 tomatoes / 2 rodo' },
+      { name: 'Ground Uziza Seeds & Crayfish', amount: '1 tsp each' },
+      { name: 'Unrefined Red Palm Oil (measured dose)', amount: '1 tbsp' },
+      { name: 'Steamed Sweet Potato (for serving)', amount: '1 medium' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Boil Garden Eggs',
+        instruction: 'Steam garden eggs for 12 minutes until skins slip off easily; mash pulp coarsely with a fork.',
+      },
+      {
+        number: '02',
+        title: 'Clarify Palm Oil Base',
+        instruction: 'Gently warm unrefined palm oil with sliced shallots and simmer crushed tomatoes until translucent.',
+      },
+      {
+        number: '03',
+        title: 'Fold Smoked Fish',
+        instruction: 'Incorporate flaked smoked mackerel, crayfish, and peppery uziza seeds into the aromatic base.',
+      },
+      {
+        number: '04',
+        title: 'Simmer with Roots',
+        instruction: 'Stir in crushed aubergine, cook on low heat for 6 minutes, and serve warm with steamed sweet potato slices.',
+      },
+    ],
     ingredients: [
-      '300g Garden Eggs (African aubergines), boiled and roughly crushed',
-      '1 Whole Hardwood-Smoked Mackerel (deboned and flaked)',
-      '3 Plum Tomatoes, 1 Onion & 2 Habanero Peppers (coarsely blended)',
+      '300g Garden Eggs, boiled and roughly crushed',
+      '1 Whole Hardwood-Smoked Mackerel',
+      '3 Plum Tomatoes, 1 Onion & 2 Habanero Peppers',
       '1 tsp Ground Uziza Seeds & Crayfish',
-      '1 tbsp Red Palm Oil (unrefined, heart-healthy portion)',
+      '1 tbsp Red Palm Oil',
     ],
     steps: [
-      'Boil the garden eggs for 12 minutes until soft, peel skins and crush coarsely with a wooden fork.',
-      'Sauté onions and the tomato-habanero puree in 1 tbsp palm oil for 10 minutes until oil clarifies.',
-      'Add the flaked smoked mackerel, crayfish, uziza seeds, and salt.',
-      'Gently fold in the crushed garden eggs and simmer on low for 6 minutes. Serve with steamed sweet potatoes.',
+      'Boil garden eggs for 12 minutes until soft, peel skins and crush coarsely.',
+      'Sauté onions and tomato-habanero puree in palm oil for 10 minutes.',
+      'Add flaked smoked mackerel, crayfish, uziza seeds, and salt.',
+      'Fold in crushed garden eggs and simmer on low for 6 minutes.',
     ],
   },
   {
     id: 'protein-ogi-walnuts',
     title: 'Protein Ogi with Crushed Walnuts & Berries',
+    subtitle: 'MORNING METABOLISM — ENZYME ACTIVE',
     description:
       'Naturally fermented bio-active corn pudding enhanced with clean vanilla whey and omega-dense local Nigerian walnuts.',
     category: ['all', 'breakfast', 'quick meals', 'high protein'],
-    prepTime: '10 MIN',
-    protein: '24g Protein',
+    prepTime: '10 min',
+    servings: '1 bowl',
+    protein: '24g',
     calories: '310 kcal',
+    fiber: '5G',
+    sodium: '110MG',
+    macroSplit: '30% Protein • 50% Complex Carbs • 20% Healthy Fats',
     badge: 'Breakfast',
+    fusionTag: 'FERMENTED ANCIENT GRAIN',
+    rating: '★ 4.9 (136 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuCNhyCgG3PDy5KeEavezpXl6a6GpEDK9BGYL83ofj3Ud_6LHDJwOkzT8cx2ElpvbTD3Rosy1kTiLJwSKs-3zChkCHjbmqY3jn3VpCnXzXcz5TRlR7lBgee6Y1C0eH114Hi89Yve844iacUhbl3-EosjIQjiftOz85_9t4gGAsK3jj8yq8qcviM2ANQ9fnNs_W4UsDvV_aPEpbtax0rXDLEZI5qMC48P11gEaru276XjMLNXFRURsBx7HA',
+    coachTip:
+      'Fermented ogi has live lactic acid bacteria that prepare your digestive enzyme cascade before morning training sessions.',
+    tags: ['Gut Health', 'Under 15 Mins', 'Pre-Workout Fuel'],
+    ingredientsList: [
+      { name: 'Fermented Brown Corn Ogi Paste', amount: '60g' },
+      { name: 'Clean Vanilla Whey or Pea Protein', amount: '1 scoop (30g)' },
+      { name: 'Roasted Nigerian Walnuts (Asala), crushed', amount: '30g' },
+      { name: 'Fresh Dark Blackberries & Blueberries', amount: '1 handful' },
+      { name: 'Ceylon Cinnamon & Raw Wild Honey', amount: '1 tsp' },
+      { name: 'Unsweetened Almond Milk', amount: '2 tbsp' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Slurry Preparation',
+        instruction: 'Whisk ogi paste in 3 tbsp cool water in a stoneware bowl until completely smooth.',
+      },
+      {
+        number: '02',
+        title: 'Boiling Water Stream',
+        instruction: 'Pour rapidly boiling water in a continuous high stream while stirring clockwise until pudding thickens.',
+      },
+      {
+        number: '03',
+        title: 'Protein Fold',
+        instruction: 'Let steam settle for 60 seconds, then whisk in protein powder with a splash of almond milk.',
+      },
+      {
+        number: '04',
+        title: 'Crunch Garnish',
+        instruction: 'Crown with crushed Nigerian walnuts, fresh wild berries, and a dust of aromatic cinnamon.',
+      },
+    ],
     ingredients: [
-      '60g Fermented Brown Corn Ogi Paste (Traditional Bio-fermented)',
-      '1 Scoop (30g) Premium Clean Vanilla Whey or Pea Protein',
-      '30g Roasted Nigerian Walnuts (Asala), coarsely chopped',
+      '60g Fermented Brown Corn Ogi Paste',
+      '1 Scoop Vanilla Whey or Pea Protein',
+      '30g Roasted Nigerian Walnuts',
       'Handful of Fresh Blackberries or Blueberries',
-      '1 tsp Pure Acacia Honey or Cinnamon powder',
+      '1 tsp Raw Honey or Cinnamon powder',
     ],
     steps: [
-      'Dissolve ogi paste in 3 tbsp cool water inside a ceramic bowl to create a smooth lump-free slurry.',
-      'Pour rapidly boiling water in a continuous stream into the bowl while stirring vigorously until it thickens into velvety custard.',
-      'Allow to cool for 1 minute, then fold in vanilla protein powder with a small splash of unsweetened almond milk.',
-      'Top with toasted walnuts, fresh dark berries, and a dust of cinnamon.',
+      'Dissolve ogi paste in cool water inside a bowl to create a smooth slurry.',
+      'Pour rapidly boiling water in a continuous stream while stirring until velvety.',
+      'Fold in vanilla protein powder with unsweetened almond milk.',
+      'Top with toasted walnuts, fresh dark berries, and cinnamon.',
     ],
   },
   {
     id: 'efo-riro-lean-beef-shrimps',
     title: 'Efo Riro with Lean Beef & Shrimps',
+    subtitle: 'IRON & CELLULAR VITALITY — DINNER REPAIR',
     description:
       'Iron-dense indigenous green stew cooked with fermented locust beans (iru), lean sirloin cubes, and tiger prawns with minimal oil.',
     category: ['all', 'dinner', 'high protein'],
-    prepTime: '35 MIN',
-    protein: '44g Protein',
+    prepTime: '35 min',
+    servings: '3 servings',
+    protein: '44g',
     calories: '415 kcal',
+    fiber: '8G',
+    sodium: '380MG',
+    macroSplit: '42% Protein • 28% Complex Carbs • 30% Healthy Fats',
     badge: 'High Iron & Protein',
+    fusionTag: 'YORUBA TRADITIONAL',
+    rating: '★ 5.0 (270 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuA0GPD_04nWsh--BmlMb1KK9rjE4HwtejIis51BuhgoPvD7nEocVBFS8NhOtT_kCiO5m3HCBdgfio4pNlDxxNkzs_nMBLrvu3roQeguMTZjDRbwP2GO9asB1iS_CicxsNWF6w6MvDmdc5Ws7v55A-M1bydY3tS8IbsbINQ_WxHS2NvDpOYpAkgWXhjo7dnmhzvrtQwH_VEZvWGu2T3hHj1BgYvl3fVemW-TurGEs1vHwUFPQNYBa_v2Yw',
+    coachTip:
+      'Never over-boil efo greens! Adding them at the very end and turning off heat locks in folate and vibrant green chlorophyll.',
+    tags: ['High Iron', 'Lean Sirloin', 'Slow Cooked Broth'],
+    ingredientsList: [
+      { name: 'Fresh Efo Shoko or Spinach (blanched & squeezed dry)', amount: '400g' },
+      { name: 'Lean Sirloin Beef (cubed & slow-simmered)', amount: '200g' },
+      { name: 'Pink Tiger Prawns (shelled & deveined)', amount: '150g' },
+      { name: 'Fermented Locust Beans (Iru Woro)', amount: '2 tbsp' },
+      { name: 'Coarsely crushed Tatashe & Shombo pepper base', amount: '1 cup' },
+      { name: 'Ground Dried Crayfish', amount: '1 tbsp' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Aromatics Reduction',
+        instruction: 'Simmer crushed tatashe with washed iru and ground crayfish until moisture reduces by half.',
+      },
+      {
+        number: '02',
+        title: 'Incorporate Sirloin',
+        instruction: 'Add slow-cooked tender lean beef cubes and 3 tbsp concentrated broth.',
+      },
+      {
+        number: '03',
+        title: 'Flash Cook Prawns',
+        instruction: 'Toss in deveined tiger prawns for 3 minutes until firm and blush pink.',
+      },
+      {
+        number: '04',
+        title: 'Fold Greens & Rest',
+        instruction: 'Fold in squeezed greens, remove pan from heat immediately, and cover for 2 minutes to steam gently.',
+      },
+    ],
     ingredients: [
-      '400g Fresh Efo Shoko or Spinach leaves (blanched & squeezed dry)',
-      '200g Lean Sirloin Beef (cubed & slow-simmered in aromatics)',
-      '150g Fresh Pink Tiger Prawns (shelled and deveined)',
-      '2 tbsp Fermented Locust Beans (Iru Woro)',
-      'Coarsely crushed Tatashe (Bell pepper), Shombo and Onion base',
-      '1 tbsp Ground Dried Crayfish',
+      '400g Fresh Efo Shoko or Spinach leaves',
+      '200g Lean Sirloin Beef, cubed',
+      '150g Pink Tiger Prawns',
+      '2 tbsp Fermented Locust Beans (Iru)',
+      'Crushed Tatashe and Onion base',
+      '1 tbsp Ground Crayfish',
     ],
     steps: [
-      'Heat the aromatics base in a pan, stirring in washed iru and ground crayfish for 7 minutes.',
-      'Add the cooked tender beef cubes with 3 tbsp of concentrated meat broth.',
-      'Toss in the tiger prawns and cook for 3 minutes until pink and juicy.',
-      'Fold in the blanched, drained greens. Cook on low heat for exactly 3 minutes so greens retain vibrancy and crispness.',
+      'Simmer aromatics base with iru and ground crayfish for 7 minutes.',
+      'Add cooked beef cubes with 3 tbsp meat broth.',
+      'Toss in tiger prawns and cook for 3 minutes until juicy.',
+      'Fold in blanched greens on low heat for 3 minutes.',
     ],
   },
   {
     id: 'sweet-potato-chickpea-bowl',
     title: 'Spiced Sweet Potato & Chickpea Bowl',
+    subtitle: 'GLYCOGEN RESTORATION — VEGAN POWER',
     description:
       'Complex low-glycemic carbohydrates loaded with potassium to accelerate post-workout muscular restoration.',
     category: ['all', 'lunch', 'dinner'],
-    prepTime: '25 MIN',
-    protein: '16g Protein',
+    prepTime: '25 min',
+    servings: '2 bowls',
+    protein: '16g',
     calories: '370 kcal',
+    fiber: '12G',
+    sodium: '240MG',
+    macroSplit: '18% Protein • 58% Complex Carbs • 24% Healthy Fats',
     badge: 'Vegetarian',
+    fusionTag: 'PLANT-BASED CRAFT',
+    rating: '★ 4.8 (88 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAJtmo83fnM9frv1lG05iXt530DDA4TfrkkubcNWHXDvARqRqBG6iz74nKEgoBQC_gnf202gi-cXw1IJbpKM1ux7Df6SnDItVZ91sf4OdZ0ZiAsdr4YTyQ1TlZqtnOMHiSZERugSw5DFK4H_CX2YIJi07nhtPcPUfnDntP1dAF2LJLUIfBAp87cq0IVklwJwO3A00M8ncDOYp2WFZXAtAM0-vtGWMYFzmRULT1EYWCQGowMFlaO3-WVlQ',
+    coachTip:
+      'Roasting chickpeas with cumin activates fat-soluble phytonutrients that soothe joint inflammation after high-volume leg days.',
+    tags: ['Plant-Based', 'High Fiber', 'Post-Leg Day'],
+    ingredientsList: [
+      { name: 'Roasted Sweet Potato Cubes (smoked paprika)', amount: '250g' },
+      { name: 'Organic Chickpeas (roasted with cumin & garlic)', amount: '150g' },
+      { name: 'Tuscan Kale (massaged with lemon & olive oil)', amount: '2 cups' },
+      { name: 'Cucumber (shaved into ribbons)', amount: '1/2 cucumber' },
+      { name: 'Velvety Tahini Ginger Dressing', amount: '2 tbsp' },
+      { name: 'Toasted Sesame Seeds', amount: '1 tbsp' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Oven Roast Roots',
+        instruction: 'Toss sweet potato cubes with smoked paprika and sea salt; roast at 200°C for 22 minutes.',
+      },
+      {
+        number: '02',
+        title: 'Crisp Chickpeas',
+        instruction: 'Roast drained chickpeas on baking sheet until crackling and fragrant with toasted cumin.',
+      },
+      {
+        number: '03',
+        title: 'Massage Kale',
+        instruction: 'Drizzle kale with lemon juice and olive oil, massaging leaves with fingertips until dark and silky.',
+      },
+      {
+        number: '04',
+        title: 'Assembly & Tahini',
+        instruction: 'Arrange sweet potato, chickpeas, and cucumber ribbons over kale. Drizzle with sesame tahini dressing.',
+      },
+    ],
     ingredients: [
-      '250g Roasted Sweet Potato cubes with smoked paprika',
-      '150g Organic Chickpeas (roasted with cumin & garlic)',
-      '2 cups Chopped Kale (massaged with lemon & olive oil)',
-      '1/2 Cucumber (shaved ribbons)',
+      '250g Roasted Sweet Potato cubes',
+      '150g Organic Chickpeas, roasted',
+      '2 cups Chopped Kale, massaged',
+      '1/2 Cucumber ribbons',
       '2 tbsp Tahini Ginger Dressing',
     ],
     steps: [
-      'Roast sweet potato cubes and drained chickpeas on a baking sheet at 200°C for 22 minutes.',
-      'Massage kale leaves in a bowl with lemon juice until deep green and soft.',
-      'Layer sweet potato, crispy chickpeas, cucumber ribbons, and massaged kale.',
+      'Roast sweet potato cubes and chickpeas at 200°C for 22 minutes.',
+      'Massage kale leaves with lemon juice and olive oil.',
+      'Layer sweet potato, crispy chickpeas, and cucumber over kale.',
       'Drizzle with velvety tahini ginger dressing.',
     ],
   },
   {
     id: 'zesty-suya-beef-salad',
     title: 'Zesty Suya Beef Salad with Citrus Dressing',
+    subtitle: 'THERMOGENIC QUICK HARVEST — 15 MIN',
     description:
       'Quick 15-minute assemblage with high thermogenic kick and refreshing Lagos garden greens.',
     category: ['all', 'lunch', 'quick meals', 'high protein', 'snacks'],
-    prepTime: '15 MIN',
-    protein: '32g Protein',
+    prepTime: '15 min',
+    servings: '1 bowl',
+    protein: '32g',
     calories: '340 kcal',
+    fiber: '6G',
+    sodium: '280MG',
+    macroSplit: '38% Protein • 32% Complex Carbs • 30% Healthy Fats',
     badge: 'Quick Meal',
+    fusionTag: 'CONTEMPORARY NAIJA',
+    rating: '★ 4.9 (155 reviews)',
     imageUrl:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuDcr6iINCS-YZJb5yxMF5yMW2TWCCpl8MdA--cDASGSh9zvSuGRjuVzZtAWysIzAjBL24t9QNNro2z-vK2xnUmS2B3gUtmXiQ5nwmHiRKkp_73IFlt99J2G9c02bnClwN3lWuwUeWx-roOI-2rYV5OMyXP0qZf6bhpE5i1UUvkZg_l2IkhoCYyUDvqiR1WiXxtbLOYedrah2gVpvrmJlpaeYKLt1-K2SbTerItSXPEpuOixp28dqJAHTA',
+    coachTip:
+      'The natural citric acid in fresh oranges balances the fiery heat of yaji spices while boosting dietary non-heme iron absorption.',
+    tags: ['Under 15 Mins', 'High Protein', 'Post-Cardio'],
+    ingredientsList: [
+      { name: 'Grilled Beef Tenderloin (thinly sliced across grain)', amount: '200g' },
+      { name: 'Dry Suya Pepper Rub (Yaji)', amount: '1 tbsp' },
+      { name: 'Mixed Watercress & Shredded Purple Cabbage', amount: '2 cups' },
+      { name: 'Fresh Navel Orange (peeled & segmented)', amount: '1 whole' },
+      { name: 'Shaved Shallots & Thin Cucumber', amount: '1/2 cup' },
+      { name: 'Cold-Pressed Lime Vinaigrette', amount: '1 tbsp' },
+    ],
+    stepsList: [
+      {
+        number: '01',
+        title: 'Dust Tenderloin',
+        instruction: 'Dust warm sliced tenderloin strips with authentic suya pepper rub.',
+      },
+      {
+        number: '02',
+        title: 'Toss Crisp Greens',
+        instruction: 'Lightly toss watercress and purple cabbage ribbons with cold-pressed lime vinaigrette.',
+      },
+      {
+        number: '03',
+        title: 'Segment Citrus',
+        instruction: 'Carve orange into clean skinless segments over a bowl to capture all fresh juices.',
+      },
+      {
+        number: '04',
+        title: 'Plating Balance',
+        instruction: 'Arrange beef slices over dressed greens and top with bright citrus segments and sliced shallots.',
+      },
+    ],
     ingredients: [
-      '200g Grilled Beef Tenderloin (thinly sliced across the grain)',
+      '200g Grilled Beef Tenderloin, thinly sliced',
       '1 tbsp Dry Suya Pepper Rub',
-      'Mixed Watercress, Shredded Purple Cabbage, Shaved Shallots',
-      '1 Fresh Orange (peeled & segmented)',
+      'Watercress and Shredded Purple Cabbage',
+      '1 Fresh Orange, segmented',
       '1 tbsp Lime Vinaigrette',
     ],
     steps: [
@@ -239,6 +551,24 @@ export default function CookbookPage() {
   const [savedRecipeIds, setSavedRecipeIds] = useState<string[]>(['suya-salmon-mash']);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
+  // Interactive Checklist and Action States
+  const [checkedIngredients, setCheckedIngredients] = useState<string[]>([]);
+  const [addedShoppingList, setAddedShoppingList] = useState(false);
+  const [loggedMeal, setLoggedMeal] = useState(false);
+
+  const openRecipeDetails = (recipe: Recipe) => {
+    setSelectedRecipe(recipe);
+    setCheckedIngredients([]);
+    setAddedShoppingList(false);
+    setLoggedMeal(false);
+  };
+
+  const toggleIngredientCheck = (name: string) => {
+    setCheckedIngredients((prev) =>
+      prev.includes(name) ? prev.filter((item) => item !== name) : [...prev, name]
+    );
+  };
+
   const toggleBookmark = (id: string, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
     setSavedRecipeIds((prev) =>
@@ -260,6 +590,12 @@ export default function CookbookPage() {
       return matchesCategory && matchesSearch;
     });
   }, [search, selectedCategory]);
+
+  const checkedCount = selectedRecipe
+    ? checkedIngredients.filter((name) =>
+        selectedRecipe.ingredientsList.some((ing) => ing.name === name)
+      ).length
+    : 0;
 
   return (
     <div className="space-y-8 pb-12 max-w-7xl mx-auto">
@@ -434,7 +770,7 @@ export default function CookbookPage() {
             <div className="flex items-center justify-between pt-2 border-t border-[#E4DDD3]/70">
               <button
                 type="button"
-                onClick={() => setSelectedRecipe(FEATURED_HERO_RECIPE)}
+                onClick={() => openRecipeDetails(FEATURED_HERO_RECIPE)}
                 className="h-11 px-6 bg-[#9a4023] hover:bg-[#853218] text-white font-bold text-[12px] tracking-wider uppercase rounded-xl transition-all flex items-center gap-2 shadow-xs cursor-pointer active:scale-98"
               >
                 <span>VIEW RECIPE</span>
@@ -489,7 +825,7 @@ export default function CookbookPage() {
               return (
                 <article
                   key={recipe.id}
-                  onClick={() => setSelectedRecipe(recipe)}
+                  onClick={() => openRecipeDetails(recipe)}
                   className="group bg-[#F2EDE4] rounded-2xl overflow-hidden flex flex-col justify-between border border-[#E4DDD3] shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer"
                 >
                   <div>
@@ -602,7 +938,7 @@ export default function CookbookPage() {
 
         <button
           type="button"
-          onClick={() => setSelectedRecipe(FEATURED_HERO_RECIPE)}
+          onClick={() => openRecipeDetails(FEATURED_HERO_RECIPE)}
           className="shrink-0 h-10 px-5 bg-[#FAF7F2] text-[#1d1b19] font-bold text-[11px] tracking-wider uppercase rounded-xl hover:bg-[#EAE3D6] border border-[#E4DDD3] transition-colors cursor-pointer"
         >
           READ GUIDE
@@ -610,135 +946,325 @@ export default function CookbookPage() {
       </section>
 
       {/* ========================================================
-          6. INTERACTIVE RECIPE MODAL DRAWER
+          6. INTERACTIVE RECIPE MODAL DRAWER (EDITORIAL DETAIL VIEW)
          ======================================================== */}
       {selectedRecipe && (
         <div
-          className="fixed inset-0 z-50 bg-[#1C1A18]/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-50 bg-[#1C1A18]/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-in fade-in duration-200"
           onClick={() => setSelectedRecipe(null)}
         >
           <div
-            className="bg-[#FAF7F2] rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 space-y-6 shadow-2xl border border-[#E4DDD3] animate-in fade-in zoom-in-95 duration-200"
+            className="bg-[#FAF7F2] rounded-3xl max-w-5xl w-full max-h-[92vh] overflow-y-auto p-5 sm:p-8 md:p-10 shadow-2xl border border-[#E4DDD3] my-auto relative animate-in zoom-in-95 duration-200"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Top Modal Header */}
-            <div className="flex justify-between items-start border-b border-[#E4DDD3] pb-4">
-              <div className="space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#9a4023]">
-                  {selectedRecipe.badge}
-                </span>
-                <h2 className="font-serif text-[24px] sm:text-[28px] font-bold text-[#1d1b19] leading-tight">
-                  {selectedRecipe.title}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setSelectedRecipe(null)}
-                className="p-1.5 rounded-full hover:bg-[#EAE3D6] text-[#786b66] hover:text-[#1d1b19] transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Top Close Button */}
+            <button
+              type="button"
+              onClick={() => setSelectedRecipe(null)}
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 w-10 h-10 rounded-full bg-[#F2EDE4] hover:bg-[#EAE3D6] text-[#56423d] hover:text-[#1d1b19] flex items-center justify-center transition-colors shadow-xs z-20 cursor-pointer"
+              aria-label="Close recipe"
+            >
+              <X className="w-5 h-5" />
+            </button>
 
-            {/* Modal Image */}
-            <div className="relative h-56 sm:h-64 w-full rounded-2xl overflow-hidden bg-[#1C1A18]">
-              <img
-                alt={selectedRecipe.title}
-                className="w-full h-full object-cover filter brightness-95"
-                src={selectedRecipe.imageUrl}
-              />
-            </div>
+            {/* Two-Column Editorial Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+              
+              {/* Left Column: Image, Quick Chips, Coach Tolu Insight, Tags */}
+              <div className="lg:col-span-5 flex flex-col gap-5">
+                {/* Food Image Card with Badges & Caption */}
+                <div className="relative rounded-2xl overflow-hidden h-64 sm:h-72 w-full bg-[#1C1A18] shadow-md group">
+                  <img
+                    alt={selectedRecipe.title}
+                    src={selectedRecipe.imageUrl}
+                    className="w-full h-full object-cover filter brightness-95 group-hover:scale-105 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent flex flex-col justify-between p-4">
+                    <p className="text-white/95 text-[11px] leading-snug line-clamp-2 drop-shadow-sm font-sans">
+                      {selectedRecipe.description}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2.5 py-1 rounded-md bg-[#1C1A18]/90 text-white/95 font-bold text-[10px] tracking-wider uppercase backdrop-blur-xs">
+                        {selectedRecipe.fusionTag}
+                      </span>
+                      <span className="px-2.5 py-1 rounded-md bg-[#1C1A18]/90 text-white/95 font-bold text-[10px] tracking-wider backdrop-blur-xs flex items-center gap-1">
+                        <span className="text-[#ffdbd0]">★</span>
+                        <span>{selectedRecipe.rating}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
 
-            {/* Macros Quick Bar */}
-            <div className="grid grid-cols-3 gap-3 p-3 bg-[#F2EDE4] rounded-xl border border-[#E4DDD3] text-center">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#786b66] block">
-                  Time
-                </span>
-                <strong className="font-serif text-[17px] text-[#1d1b19]">
-                  {selectedRecipe.prepTime}
-                </strong>
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#786b66] block">
-                  Protein
-                </span>
-                <strong className="font-serif text-[17px] text-[#9a4023]">
-                  {selectedRecipe.protein}
-                </strong>
-              </div>
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#786b66] block">
-                  Calories
-                </span>
-                <strong className="font-serif text-[17px] text-[#1d1b19]">
-                  {selectedRecipe.calories}
-                </strong>
-              </div>
-            </div>
-
-            {/* Ingredients */}
-            <div className="space-y-3">
-              <h3 className="font-serif text-[18px] font-bold text-[#1d1b19] flex items-center gap-2">
-                <span>Ingredients</span>
-                <span className="text-[12px] font-sans font-normal text-[#786b66]">
-                  ({selectedRecipe.ingredients.length} items)
-                </span>
-              </h3>
-              <ul className="space-y-2 text-[13px] text-[#56423d]">
-                {selectedRecipe.ingredients.map((ing, i) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#9a4023] mt-2 shrink-0" />
-                    <span>{ing}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Preparation Steps */}
-            <div className="space-y-3 border-t border-[#E4DDD3] pt-4">
-              <h3 className="font-serif text-[18px] font-bold text-[#1d1b19]">
-                Preparation Steps
-              </h3>
-              <ol className="space-y-3 text-[13px] text-[#56423d]">
-                {selectedRecipe.steps.map((step, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#9a4023]/10 text-[#9a4023] flex items-center justify-center font-bold text-[11px] shrink-0">
-                      {i + 1}
+                {/* 4-Metric Grid */}
+                <div className="grid grid-cols-4 gap-2 bg-[#F2EDE4] p-3 rounded-2xl border border-[#E4DDD3] text-center">
+                  <div className="flex flex-col items-center">
+                    <Clock className="w-3.5 h-3.5 text-[#786b66] mb-1" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#786b66]">
+                      PREP TIME
                     </span>
-                    <span className="leading-relaxed">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+                    <strong className="font-serif text-[14px] text-[#1d1b19] mt-0.5">
+                      {selectedRecipe.prepTime}
+                    </strong>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <UtensilsCrossed className="w-3.5 h-3.5 text-[#786b66] mb-1" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#786b66]">
+                      SERVINGS
+                    </span>
+                    <strong className="font-serif text-[14px] text-[#1d1b19] mt-0.5">
+                      {selectedRecipe.servings}
+                    </strong>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Dumbbell className="w-3.5 h-3.5 text-[#9a4023] mb-1" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#786b66]">
+                      PROTEIN
+                    </span>
+                    <strong className="font-serif text-[14px] text-[#9a4023] mt-0.5">
+                      {selectedRecipe.protein}
+                    </strong>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Flame className="w-3.5 h-3.5 text-[#786b66] mb-1" />
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#786b66]">
+                      ENERGY
+                    </span>
+                    <strong className="font-serif text-[14px] text-[#1d1b19] mt-0.5">
+                      {selectedRecipe.calories}
+                    </strong>
+                  </div>
+                </div>
 
-            {/* Modal Bottom Actions */}
-            <div className="pt-4 border-t border-[#E4DDD3] flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => toggleBookmark(selectedRecipe.id)}
-                className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#56423d] hover:text-[#9a4023] transition-colors"
-              >
-                {savedRecipeIds.includes(selectedRecipe.id) ? (
-                  <>
-                    <BookmarkCheck className="w-4 h-4 text-[#9a4023]" />
-                    <span>Saved in Favorites</span>
-                  </>
-                ) : (
-                  <>
-                    <Bookmark className="w-4 h-4" />
-                    <span>Save to Favorites</span>
-                  </>
-                )}
-              </button>
+                {/* Coach Tolu Insight Card with decorative quote watermark */}
+                <div className="relative overflow-hidden bg-[#E7EFE9] border border-[#d2e0d5] p-5 rounded-2xl space-y-2">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-[#4d6358] text-white font-serif font-bold text-[14px] flex items-center justify-center shrink-0">
+                      T
+                    </div>
+                    <div>
+                      <h4 className="font-serif text-[14px] font-bold text-[#1d1b19] leading-tight">
+                        Coach Tolu
+                      </h4>
+                      <span className="text-[9px] font-bold tracking-widest uppercase text-[#4d6358]">
+                        KINFOLK LEAD NUTRITIONIST
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-[12px] text-[#2c3d33] leading-relaxed italic relative z-10">
+                    &ldquo;{selectedRecipe.coachTip}&rdquo;
+                  </p>
+                  {/* Watermark quotation marks */}
+                  <span className="absolute -bottom-5 right-2 text-[#4d6358]/15 font-serif font-black text-[72px] select-none pointer-events-none">
+                    ”
+                  </span>
+                </div>
 
-              <button
-                type="button"
-                onClick={() => setSelectedRecipe(null)}
-                className="h-10 px-5 rounded-xl bg-[#1C1A18] hover:bg-black text-[#FAF7F2] font-bold text-[12px] transition-colors"
-              >
-                Close Recipe
-              </button>
+                {/* Tag Pills */}
+                <div className="flex flex-wrap gap-2">
+                  {selectedRecipe.tags.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="px-3 py-1 rounded-full text-[11px] font-medium bg-[#F2EDE4] text-[#56423d] border border-[#E4DDD3]"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column: Header, Actions, Ingredients Checklist, Preparation Steps, Macro Split */}
+              <div className="lg:col-span-7 flex flex-col gap-6">
+                
+                {/* Header & Description */}
+                <div className="space-y-2 pr-10">
+                  <div className="flex items-center gap-2 text-[#9a4023] font-bold text-[10px] tracking-widest uppercase">
+                    <span>{selectedRecipe.subtitle}</span>
+                  </div>
+                  <h2 className="font-serif text-[28px] sm:text-[34px] font-bold text-[#1d1b19] tracking-tight leading-tight">
+                    {selectedRecipe.title}
+                  </h2>
+                  <p className="text-[14px] text-[#56423d] leading-relaxed">
+                    {selectedRecipe.description}
+                  </p>
+                </div>
+
+                {/* Action Buttons Bar */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => toggleBookmark(selectedRecipe.id)}
+                    className="h-10 px-4 rounded-xl bg-[#9a4023] hover:bg-[#A84C2F] text-white font-bold text-[12px] tracking-wider uppercase transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  >
+                    {savedRecipeIds.includes(selectedRecipe.id) ? (
+                      <>
+                        <BookmarkCheck className="w-4 h-4" />
+                        <span>Saved Recipe</span>
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="w-4 h-4" />
+                        <span>Save Recipe</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAddedShoppingList(true);
+                      setTimeout(() => setAddedShoppingList(false), 2500);
+                    }}
+                    className="h-10 px-4 rounded-xl bg-[#F2EDE4] hover:bg-[#EAE3D6] text-[#1d1b19] border border-[#E4DDD3] font-bold text-[12px] tracking-wider uppercase transition-colors flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <ShoppingCart className="w-4 h-4 text-[#786b66]" />
+                    <span>{addedShoppingList ? 'Added to List ✓' : 'Add to Shopping List'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoggedMeal(true);
+                      setTimeout(() => setLoggedMeal(false), 2500);
+                    }}
+                    className="h-10 px-4 rounded-xl bg-[#4d6358] hover:bg-[#3d5046] text-white font-bold text-[12px] tracking-wider uppercase transition-colors flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                  >
+                    <CalendarCheck className="w-4 h-4" />
+                    <span>{loggedMeal ? 'Logged to Diary ✓' : 'Log as Meal'}</span>
+                  </button>
+                </div>
+
+                {/* Ingredients Checklist Card */}
+                <div className="bg-[#F2EDE4] p-5 rounded-2xl border border-[#E4DDD3] space-y-3">
+                  <div className="flex items-center justify-between pb-1">
+                    <div className="flex items-center gap-2">
+                      <ListChecks className="w-4 h-4 text-[#9a4023]" />
+                      <h3 className="font-serif text-[18px] font-bold text-[#1d1b19]">
+                        Ingredients Checklist
+                      </h3>
+                    </div>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-[#786b66]">
+                      {checkedCount} OF {selectedRecipe.ingredientsList.length} SELECTED
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-[#786b66]">
+                    Tap to mark off items as you prep in your kitchen.
+                  </p>
+
+                  <div className="space-y-2 pt-1">
+                    {selectedRecipe.ingredientsList.map((ing, i) => {
+                      const isChecked = checkedIngredients.includes(ing.name);
+                      return (
+                        <div
+                          key={i}
+                          onClick={() => toggleIngredientCheck(ing.name)}
+                          className={`flex items-center justify-between p-3 rounded-xl transition-all cursor-pointer border ${
+                            isChecked
+                              ? 'bg-white/90 border-[#4d6358]/40 shadow-xs'
+                              : 'bg-white/50 hover:bg-white/80 border-transparent'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div
+                              className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors shrink-0 ${
+                                isChecked
+                                  ? 'bg-[#4d6358] border-[#4d6358] text-white'
+                                  : 'border-[#89726b]/50 bg-white'
+                              }`}
+                            >
+                              {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                            </div>
+                            <span
+                              className={`text-[13px] transition-colors ${
+                                isChecked
+                                  ? 'line-through text-[#786b66]'
+                                  : 'text-[#1d1b19] font-medium'
+                              }`}
+                            >
+                              {ing.name}
+                            </span>
+                          </div>
+                          <span className="text-[12px] font-semibold text-[#786b66] shrink-0 ml-3">
+                            {ing.amount}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Preparation Method */}
+                <div className="space-y-3 pt-2">
+                  <div className="flex items-center justify-between border-b border-[#E4DDD3] pb-2">
+                    <div className="flex items-center gap-2">
+                      <CookingPot className="w-4 h-4 text-[#9a4023]" />
+                      <h3 className="font-serif text-[18px] font-bold text-[#1d1b19]">
+                        Preparation Method
+                      </h3>
+                    </div>
+                    <span className="text-[10px] font-bold tracking-widest uppercase text-[#786b66]">
+                      Step-by-step studio guide
+                    </span>
+                  </div>
+
+                  <div className="space-y-3 pt-1">
+                    {selectedRecipe.stepsList.map((st, i) => (
+                      <div
+                        key={i}
+                        className="bg-[#F2EDE4]/70 hover:bg-[#F2EDE4] p-4 rounded-2xl border border-[#E4DDD3]/80 flex gap-4 items-start transition-colors"
+                      >
+                        <span className="font-serif text-[28px] sm:text-[32px] font-bold text-[#ba5838]/40 leading-none shrink-0 select-none">
+                          {st.number}
+                        </span>
+                        <div className="space-y-1 pt-0.5">
+                          <h4 className="font-serif text-[15px] font-bold text-[#1d1b19]">
+                            {st.title}
+                          </h4>
+                          <p className="text-[13px] text-[#56423d] leading-relaxed">
+                            {st.instruction}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Target Macro Split Bottom Card */}
+                <div className="bg-[#E7EFE9] p-4 rounded-2xl border border-[#d2e0d5] flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-[#4d6358] text-white flex items-center justify-center shrink-0">
+                      <PieChart className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h4 className="font-serif text-[13px] font-bold text-[#1d1b19]">
+                        Target Macro Split
+                      </h4>
+                      <p className="text-[11px] text-[#4d6358] font-medium">
+                        {selectedRecipe.macroSplit}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-center">
+                    <div className="bg-white/80 px-3 py-1.5 rounded-lg border border-[#d2e0d5]">
+                      <span className="text-[8px] font-bold uppercase tracking-wider text-[#786b66] block">
+                        SODIUM
+                      </span>
+                      <strong className="text-[12px] font-bold text-[#1d1b19]">
+                        {selectedRecipe.sodium}
+                      </strong>
+                    </div>
+                    <div className="bg-white/80 px-3 py-1.5 rounded-lg border border-[#d2e0d5]">
+                      <span className="text-[8px] font-bold uppercase tracking-wider text-[#786b66] block">
+                        DIETARY FIBER
+                      </span>
+                      <strong className="text-[12px] font-bold text-[#1d1b19]">
+                        {selectedRecipe.fiber}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
