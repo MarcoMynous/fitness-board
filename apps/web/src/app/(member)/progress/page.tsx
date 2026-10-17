@@ -19,6 +19,7 @@ import {
   History,
   FileCheck2,
   User,
+  ChevronDown,
 } from 'lucide-react';
 
 interface CheckInRecord {
@@ -95,6 +96,24 @@ const INITIAL_PAST_RECORDS: CheckInRecord[] = [
         'Welcome to the sanctuary! Your foundation is strong. Let momentum guide you.',
     },
   },
+  {
+    id: 'checkin-w-base',
+    weekNumber: -1,
+    date: 'Sep 19, 2026',
+    weightKg: 78.8,
+    weightDelta: 'Intake Assessment',
+    waistCm: 87.5,
+    waistDelta: 'Intake',
+    sentiment: 'Ready for Reset',
+    sentimentEmoji: '🎯',
+    notes: 'Completed initial metabolic profiling, movement screening, and baseline photo intake.',
+    coachReview: {
+      reviewedAt: 'Sep 19, 2026 • 15:30 WAT',
+      coachName: 'Coach Tolu Adebayo',
+      feedback:
+        'Your initial movement screening showed strong hip mobility. We kick off Phase 1 next Saturday. Focus on steady hydration and sleep.',
+    },
+  },
 ];
 
 export default function ProgressPage() {
@@ -110,8 +129,9 @@ export default function ProgressPage() {
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [selectedPhotoName, setSelectedPhotoName] = useState<string | null>(null);
 
-  // Historical Records
+  // Historical Records & Pagination
   const [pastRecords, setPastRecords] = useState<CheckInRecord[]>(INITIAL_PAST_RECORDS);
+  const [visibleCount, setVisibleCount] = useState<number>(3);
   const [selectedPastRecord, setSelectedPastRecord] = useState<CheckInRecord | null>(null);
 
   // Fetch logged in user
@@ -148,7 +168,12 @@ export default function ProgressPage() {
       coachReview: null, // Pending Coach review
     };
 
-    setPastRecords((prev) => [newRecord, ...prev.filter((r) => r.weekNumber !== 3)]);
+    setPastRecords((prev) => {
+      const filtered = prev.filter((r) => r.weekNumber !== 3);
+      const updated = [newRecord, ...filtered];
+      return updated.sort((a, b) => b.weekNumber - a.weekNumber);
+    });
+    setVisibleCount(3);
     setIsSaved(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -163,6 +188,12 @@ export default function ProgressPage() {
     }
     return kgVal.toFixed(1);
   };
+
+  // Sorted and paginated past records (Latest always on top)
+  const sortedRecords = [...pastRecords].sort((a, b) => b.weekNumber - a.weekNumber);
+  const visibleRecords = sortedRecords.slice(0, visibleCount);
+  const hasMoreRecords = visibleCount < sortedRecords.length;
+  const remainingCount = sortedRecords.length - visibleCount;
 
   return (
     <div className="flex flex-col w-full max-w-6xl mx-auto pb-16 space-y-12">
@@ -652,7 +683,7 @@ export default function ProgressPage() {
 
         {/* History Cards List */}
         <div className="space-y-4">
-          {pastRecords.map((record) => (
+          {visibleRecords.map((record) => (
             <article
               key={record.id}
               onClick={() => setSelectedPastRecord(record)}
@@ -660,12 +691,20 @@ export default function ProgressPage() {
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E4DDD3]/70">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-2xl bg-[#9a4023]/10 text-[#9a4023] font-serif font-bold text-[15px] flex items-center justify-center shrink-0">
-                    W{record.weekNumber}
+                  <div className="w-10 h-10 rounded-2xl bg-[#9a4023]/10 text-[#9a4023] font-serif font-bold text-[13px] flex items-center justify-center shrink-0">
+                    {record.weekNumber > 0
+                      ? `W${record.weekNumber}`
+                      : record.weekNumber === 0
+                        ? 'W0'
+                        : 'BASE'}
                   </div>
                   <div>
                     <h3 className="font-serif text-[18px] font-bold text-[#1d1b19] leading-tight">
-                      Week {record.weekNumber} Check-In
+                      {record.weekNumber > 0
+                        ? `Week ${record.weekNumber} Check-In`
+                        : record.weekNumber === 0
+                          ? 'Week 0 Baseline Entry'
+                          : 'Intake Screening & Baseline'}
                     </h3>
                     <div className="flex items-center gap-2 text-[11px] text-[#786b66] mt-0.5">
                       <Calendar className="w-3 h-3" />
@@ -758,6 +797,45 @@ export default function ProgressPage() {
             </article>
           ))}
         </div>
+
+        {/* Load More Button & Archive Summary */}
+        {hasMoreRecords ? (
+          <div className="flex flex-col items-center justify-center pt-2">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((prev) => prev + 3)}
+              className="group px-7 py-3 rounded-2xl bg-[#F2EDE4] hover:bg-[#EAE3D6] border border-[#E4DDD3] text-[#1d1b19] font-bold text-[12px] tracking-wider uppercase transition-all shadow-2xs hover:shadow-xs flex items-center gap-2 cursor-pointer"
+            >
+              <ChevronDown className="w-4 h-4 text-[#9a4023] group-hover:translate-y-0.5 transition-transform" />
+              <span>
+                Load More Records ({remainingCount} Older {remainingCount === 1 ? 'Entry' : 'Entries'})
+              </span>
+            </button>
+            <p className="text-[11px] text-[#786b66] mt-2">
+              Showing {visibleRecords.length} of {sortedRecords.length} check-in entries
+            </p>
+          </div>
+        ) : (
+          sortedRecords.length > 3 && (
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 text-center sm:text-left text-[11px] text-[#786b66] border-t border-[#E4DDD3]/50">
+              <span className="flex items-center gap-1.5 justify-center sm:justify-start">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#4d6358]" />
+                <span>All {sortedRecords.length} historical check-in records loaded</span>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setVisibleCount(3);
+                  const el = document.getElementById('past-records-section');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="text-[#9a4023] hover:text-[#A84C2F] font-bold underline transition-colors cursor-pointer"
+              >
+                Show Latest 3 Only
+              </button>
+            </div>
+          )
+        )}
       </section>
 
       {/* ========================================================
