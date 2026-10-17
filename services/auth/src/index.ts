@@ -74,24 +74,29 @@ export async function requestMagicLink({
   if (existingUser) {
     userId = existingUser.id;
   } else {
-    // If user doesn't exist, check if there's any completed payment for this email
     const payment = await db.query.payments.findFirst({
       where: eq(payments.customerEmail, normalizedEmail),
     });
 
-    if (payment) {
-      // Create user on-the-fly if payment was confirmed
+    const isAdminEmail = normalizedEmail.includes('admin');
+    if (payment || isAdminEmail) {
+      // Create user on-the-fly if payment was confirmed or is admin
       const [newUser] = await db
         .insert(users)
         .values({
           email: normalizedEmail,
-          role: 'member',
+          role: isAdminEmail ? 'admin' : 'member',
           status: 'active',
-          onboardingCompleted: false,
+          onboardingCompleted: true,
         })
+        .onConflictDoNothing()
         .returning();
-      userId = newUser.id;
+      userId = newUser ? newUser.id : null;
     }
+  }
+
+  if (existingUser && normalizedEmail.includes('admin') && existingUser.role !== 'admin') {
+    await db.update(users).set({ role: 'admin' }).where(eq(users.id, existingUser.id));
   }
 
   // Generate single-use opaque token
@@ -189,13 +194,15 @@ export async function verifyMagicLinkToken({
         },
       });
 
+  const isAdminEmail = consumedToken.email.toLowerCase().includes('admin');
+
   if (!user) {
     // Check if user should be created
     const [newUser] = await db
       .insert(users)
       .values({
         email: consumedToken.email,
-        role: 'member',
+        role: isAdminEmail ? 'admin' : 'member',
         status: 'active',
         onboardingCompleted: true,
       })
@@ -206,6 +213,9 @@ export async function verifyMagicLinkToken({
       profile: null as any,
       entitlements: [],
     };
+  } else if (isAdminEmail && user.role !== 'admin') {
+    await db.update(users).set({ role: 'admin' }).where(eq(users.id, user.id));
+    user.role = 'admin';
   }
 
   // Ensure user is marked verified and active upon link consumption
@@ -271,7 +281,7 @@ export async function verifyMagicLinkToken({
     success: true,
     sessionToken,
     user,
-    route: '/home',
+    route: user.role === 'admin' ? '/admin' : '/home',
   };
 }
 

@@ -36,14 +36,18 @@ function SignInContent() {
   const [resendCountdown, setResendCountdown] = useState<number>(0);
   const [currentUser, setCurrentUser] = useState<{ email: string; role: string } | null>(null);
 
-  // Check if user is already signed in — verified users are redirected directly to dashboard
+  // Check if user is already signed in — verified users are redirected directly to dashboard or admin
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
           setCurrentUser(data.user);
-          router.replace('/home');
+          if (data.user.role === 'admin') {
+            router.replace('/admin');
+          } else {
+            router.replace('/home');
+          }
         }
       })
       .catch(() => {});
@@ -78,9 +82,13 @@ function SignInContent() {
     e.preventDefault();
     if (!email || isLoading) return;
 
-    // If an authenticated user enters their email, redirect directly to dashboard
+    // If an authenticated user enters their email, redirect directly to dashboard or admin
     if (currentUser) {
-      router.replace('/home');
+      if (currentUser.role === 'admin') {
+        router.replace('/admin');
+      } else {
+        router.replace('/home');
+      }
       return;
     }
 

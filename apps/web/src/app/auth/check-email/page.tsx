@@ -29,7 +29,11 @@ function CheckEmailContent() {
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated && data.user) {
-          router.replace('/home');
+          if (data.user.role === 'admin') {
+            router.replace('/admin');
+          } else {
+            router.replace('/home');
+          }
         }
       })
       .catch(() => {});
