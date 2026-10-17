@@ -146,6 +146,17 @@ export default function ProgressPage() {
             data.user.email?.split('@')[0] ||
             'Member';
           setUserName(name);
+
+          if (Array.isArray(data.user.profile?.dietaryPreferences)) {
+            const wItem = data.user.profile.dietaryPreferences.find((p: string) =>
+              p.startsWith('weight:')
+            );
+            const wsItem = data.user.profile.dietaryPreferences.find((p: string) =>
+              p.startsWith('waist:')
+            );
+            if (wItem) setWeight(wItem.split(':')[1]);
+            if (wsItem) setWaist(wsItem.split(':')[1]);
+          }
         }
       })
       .catch((err) => console.error('Error fetching user for progress:', err));

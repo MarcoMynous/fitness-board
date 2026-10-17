@@ -32,6 +32,13 @@ export default async function MemberHomePage() {
   const weeklyTarget = user.profile?.weeklyWorkoutTarget || 4;
   const environment = user.profile?.trainingEnvironment || 'Commercial Gym';
 
+  // Parse user biometrics if stored during onboarding
+  let userWeight = '72.0 kg';
+  if (Array.isArray(user.profile?.dietaryPreferences)) {
+    const w = user.profile.dietaryPreferences.find((p: string) => p.startsWith('weight:'));
+    if (w) userWeight = `${w.split(':')[1]} kg`;
+  }
+
   // Live database queries for user completions & latest recipe
   const [completions, latestRecipe] = await Promise.all([
     db.query.workoutCompletions.findMany({
@@ -324,7 +331,7 @@ export default async function MemberHomePage() {
                   Current Transformation
                 </span>
                 <span className="font-serif text-[17px] font-bold text-[#1d1b19]">
-                  74.6 kg <span className="text-[11px] font-sans font-bold text-[#4d6358]">(-3.4 kg total)</span>
+                  {userWeight} <span className="text-[11px] font-sans font-bold text-[#4d6358]">(Active Phase)</span>
                 </span>
               </div>
               <Link

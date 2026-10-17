@@ -13,8 +13,8 @@ export interface OnboardingState {
 }
 
 export const INITIAL_ONBOARDING_STATE: OnboardingState = {
-  fullName: 'Amaka Vance',
-  displayName: 'Amaka',
+  fullName: '',
+  displayName: '',
   goal: 'Build & Shape Body',
   weight: '72',
   height: '168',

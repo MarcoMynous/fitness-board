@@ -95,18 +95,31 @@ export default function ProfilePage() {
           const formattedEnv =
             u.profile?.trainingEnvironment?.replace(/_/g, ' ') || 'Commercial Gym';
 
+          let parsedWeight = '72.0 kg';
+          let parsedHeight = '168 cm';
+          if (Array.isArray(u.profile?.dietaryPreferences)) {
+            const wItem = u.profile.dietaryPreferences.find((p: string) => p.startsWith('weight:'));
+            const hItem = u.profile.dietaryPreferences.find((p: string) => p.startsWith('height:'));
+            if (wItem) parsedWeight = `${wItem.split(':')[1]} kg`;
+            if (hItem) parsedHeight = `${hItem.split(':')[1]} cm`;
+          }
+
           setUserProfile((prev) => ({
             ...prev,
             name: fullName,
             email: email,
             tier: tier,
             mainGoal: formattedGoal,
+            startingWeight: parsedWeight,
+            currentWeight: parsedWeight,
+            height: parsedHeight,
             trainingLevel: u.profile?.experienceLevel || prev.trainingLevel,
             sanctuary: formattedEnv,
           }));
           setEditName(fullName);
           setEditEmail(email);
           setEditGoal(formattedGoal);
+          setEditWeight(parsedWeight.replace(' kg', ''));
           setEditSanctuary(formattedEnv);
         }
       })

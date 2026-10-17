@@ -25,13 +25,25 @@ export default function OnboardingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // If user is already authenticated and verified, redirect directly to dashboard
+  // Pre-fill user data if authenticated, or redirect if already onboarded
   useEffect(() => {
     fetch('/api/auth/me')
       .then((res) => res.json())
       .then((data) => {
-        if (data.authenticated && data.user?.onboardingCompleted) {
-          router.replace('/home');
+        if (data.authenticated && data.user) {
+          if (data.user.onboardingCompleted) {
+            router.replace('/home');
+          } else {
+            const prefillFull = data.user.profile?.fullName || '';
+            const prefillDisplay =
+              data.user.profile?.displayName ||
+              (data.user.email ? data.user.email.split('@')[0] : '');
+            setState((prev) => ({
+              ...prev,
+              fullName: prev.fullName || prefillFull,
+              displayName: prev.displayName || prefillDisplay,
+            }));
+          }
         }
       })
       .catch(() => {});
@@ -93,13 +105,21 @@ export default function OnboardingPage() {
 
     const freqNumber = parseInt(state.frequency.replace(/\D/g, ''), 10) || 4;
 
+    const derivedName = state.fullName.trim() || state.displayName.trim() || 'Member';
+    const derivedDisplay =
+      state.displayName.trim() || state.fullName.trim().split(' ')[0] || 'Member';
+
     const payload = {
-      fullName: state.fullName || 'Amaka Vance',
-      displayName: state.displayName || 'Amaka',
+      fullName: derivedName,
+      displayName: derivedDisplay,
       fitnessGoal: goalMap[state.goal] || 'strength_hypertrophy',
       experienceLevel: expMap[state.experience] || 'intermediate',
       trainingEnvironment: locMap[state.location] || 'commercial_gym',
-      dietaryPreferences: ['High Protein (Default)'],
+      dietaryPreferences: [
+        `weight:${state.weight || '72'}`,
+        `height:${state.height || '168'}`,
+        `waist:${state.waist || '74'}`,
+      ],
       weeklyWorkoutTarget: Math.min(Math.max(freqNumber, 2), 6),
       receiveWeeklyDigest: true,
     };
@@ -158,7 +178,11 @@ export default function OnboardingPage() {
             }`}
           >
             {currentStep === 0 && (
-              <StepWelcome state={state} onContinue={handleNext} />
+              <StepWelcome
+                state={state}
+                onChange={updateState}
+                onContinue={handleNext}
+              />
             )}
 
             {currentStep === 1 && (
